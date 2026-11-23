@@ -1,0 +1,406 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width,initial-scale=1" />
+  <meta name="color-scheme" content="light" />
+  <title>Perioperative Diabetes, GLP-1 & SGLT2 | Clinical Pathway Prototype</title>
+  <style>
+    :root{--navy:#142a44;--navy2:#243e5c;--teal:#047d80;--blue:#2c6fe0;--ink:#1a2f48;--muted:#5f7186;--line:#dbe5ee;--bg:#f3f6fa;--white:#fff;--soft:#eef4f8;--green:#08734f;--greenbg:#e9f7f0;--amber:#9a5705;--amberbg:#fff5e3;--red:#b5363f;--redbg:#fff0f1;--shadow:0 8px 22px rgba(18,38,64,.06)}
+    *{box-sizing:border-box}html{scroll-behavior:smooth}body{margin:0;background:var(--bg);color:var(--ink);font:15px/1.55 -apple-system,BlinkMacSystemFont,"Segoe UI",Arial,sans-serif}button,input,select{font:inherit}a{color:#1b5aa6}button{cursor:pointer}button:focus-visible,input:focus-visible,select:focus-visible{outline:3px solid #87b7f8;outline-offset:2px}
+    .top{background:#fff;border-bottom:1px solid var(--line)}.topin{max-width:1500px;margin:auto;padding:18px 28px;display:flex;gap:18px;align-items:center;justify-content:space-between}.identity{display:flex;align-items:center;gap:15px}.logo{width:48px;height:48px;border-radius:14px;background:#e8f5f3;color:var(--teal);display:grid;place-items:center;font-size:27px;font-weight:900}.eyebrow{color:#2771b6;font-size:11px;font-weight:800;letter-spacing:.14em;text-transform:uppercase}.site-title{font-weight:780;font-size:22px;color:var(--navy);line-height:1.2}.mini-meta{font-size:12px;color:var(--muted);text-align:right}.tag{display:inline-flex;padding:4px 10px;border-radius:999px;background:#e9eff8;color:#33577b;font-size:11px;font-weight:750;white-space:nowrap}.tag.draft{background:#fff0d6;color:#855400}
+    .shell{max-width:1500px;margin:0 auto;padding:22px 28px 56px;display:grid;grid-template-columns:255px minmax(0,1fr) 300px;gap:22px;align-items:start}.sidebar,.summary-side{position:sticky;top:18px}.panel,.sidecard{background:#fff;border:1px solid var(--line);border-radius:16px;box-shadow:var(--shadow)}.sidecard{padding:17px}.mobile-nav-hint{display:none}.navhead{font-size:11px;letter-spacing:.1em;text-transform:uppercase;color:#8091a3;font-weight:800;margin:0 0 12px}.nav-btn{width:100%;display:flex;align-items:center;gap:10px;border:1px solid transparent;border-radius:11px;padding:12px 11px;background:transparent;text-align:left;color:var(--navy);font-weight:660;margin:4px 0}.nav-btn .num{font-size:12px;font-weight:900;display:inline-grid;place-items:center;min-width:25px;height:25px;border-radius:8px;background:#e8eff5;color:#627d98}.nav-btn:hover{background:#f4f8fb}.nav-btn.active{background:#e9f6f6;color:#006d70;border-color:#c6e6e4}.nav-btn.active .num{background:#0b8181;color:white}.side-note{margin:18px 0 0;border-top:1px solid var(--line);padding-top:15px;font-size:12px;color:var(--muted)}.privacy{background:#eef6fb;border:1px solid #d7e9f5;padding:12px;border-radius:10px;margin-top:14px;font-size:12px;color:#3a5675}
+    .main{min-width:0}.banner{border-radius:16px;background:linear-gradient(120deg,#17314e,#1c4b62 68%,#0e7b78);padding:28px;color:white;box-shadow:var(--shadow);margin-bottom:17px}.banner small{display:block;color:#bae4e1;letter-spacing:.1em;font-weight:800;font-size:11px;text-transform:uppercase}.banner h1{font-size:29px;line-height:1.16;letter-spacing:-.035em;margin:10px 0}.banner p{max-width:850px;color:#dce9f0;margin:0}.alertline{display:flex;gap:10px;align-items:start;background:#fff8ea;border:1px solid #f0d5aa;color:#7b541e;padding:14px 16px;border-radius:13px;margin-bottom:17px;font-size:13px}.alertline strong{color:#64400d}
+    .view{display:none}.view.active{display:block}.section{padding:25px;margin-bottom:17px}.section h2{font-size:20px;letter-spacing:-.02em;margin:0 0 4px}.section h3{font-size:15px;margin:14px 0 10px;color:#173753}.sub{font-size:13px;color:var(--muted);margin:0 0 17px}.form-grid{display:grid;grid-template-columns:1fr 1fr;gap:16px}.field{min-width:0}.field label,.field .field-label{display:block;font-weight:720;font-size:13px;color:#34506a;margin:0 0 6px}.field select,.field input[type=number],.field input[type=text]{width:100%;border:1px solid #cbd9e6;border-radius:9px;background:#fff;color:var(--ink);min-height:43px;padding:9px 11px}.field .hint{font-size:11px;color:#6a7d90;margin-top:5px}.divider{height:1px;background:var(--line);margin:20px 0}.check-grid{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:10px}.check-card{display:flex;align-items:start;gap:10px;background:#f9fbfc;border:1px solid #dce6ee;border-radius:11px;padding:12px;cursor:pointer;min-height:72px}.check-card:hover{border-color:#75b9b6}.check-card:has(input:checked){background:#eaf7f4;border-color:#71c6b7}.check-card input{width:18px;height:18px;margin:2px 0 0;accent-color:var(--teal);flex-shrink:0}.check-card b{display:block;font-size:13px;line-height:1.3}.check-card small{display:block;font-size:11px;color:#6b8091;margin-top:2px}.radio-row{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:9px}.pill-radio{display:flex;gap:8px;padding:11px 10px;border:1px solid #d5e2ec;background:#f9fbfd;border-radius:10px;font-size:12px;cursor:pointer;align-items:start}.pill-radio:has(input:checked){background:#e8f5f4;border-color:#84c8c6}.pill-radio input{margin-top:2px;accent-color:var(--teal)}.compact{margin:0;font-size:12px;color:var(--muted)}.recs{display:grid;gap:11px}.rec{border:1px solid #dce5ee;border-radius:12px;padding:13px 14px;background:white;border-left:5px solid #8ba4b7}.rec.review{border-left-color:#db942b;background:#fffaf0}.rec.urgent{border-left-color:#d2575b;background:#fff5f4}.rec.info{border-left-color:#327ca6;background:#f5faff}.rec.general{border-left-color:#148878;background:#f4fbf8}.rec-top{display:flex;gap:8px;align-items:baseline;justify-content:space-between}.rec-title{font-size:13px;font-weight:800}.rec-level{font-size:10px;font-weight:800;text-transform:uppercase;letter-spacing:.055em;color:#6a7e8c}.rec p{font-size:12px;color:#4a6074;margin:5px 0 4px}.rec .source{font-size:10px;color:#708194}.stats{display:grid;grid-template-columns:repeat(3,1fr);gap:9px;margin-bottom:15px}.stat{background:#f2f7fa;border:1px solid #e0eaf2;border-radius:12px;padding:12px 10px}.stat b{display:block;font-size:16px;color:var(--navy)}.stat span{font-size:11px;color:var(--muted)}.nextbar{display:flex;flex-wrap:wrap;gap:9px;margin:16px 0 0}.btn{border:1px solid #b8ccd9;background:white;color:#25475e;border-radius:10px;padding:10px 15px;font-weight:750;font-size:13px}.btn.primary{background:#087f80;border-color:#087f80;color:white}.btn:hover{filter:brightness(.96)}.btn:active{transform:translateY(1px)}.details{border:1px solid var(--line);border-radius:11px;padding:11px 13px;margin:10px 0;background:#fff}.details summary{cursor:pointer;color:#264c69;font-weight:750;font-size:13px}.details p{font-size:12px;color:var(--muted)}.reference{font-size:12px;padding:12px;border-top:1px solid #e4ebf0}.reference a{font-weight:700}.ref-list{margin:0;padding-left:18px;color:#4a6178;font-size:12px}.ref-list li{margin:8px 0}.summary-side .sidecard{max-height:calc(100vh - 36px);overflow:auto}.summary-side h2{font-size:17px;letter-spacing:-.015em;margin:0}.summary-side .rec{margin-top:10px;padding:11px}.summary-side .rec p{font-size:11px}.summary-side .rec .source{display:none}.footer{padding:0 28px 30px;max-width:1500px;margin:auto;color:#738494;font-size:11px}.empty{border:1px dashed #c7d6e3;background:#fafcfe;border-radius:10px;padding:17px;font-size:12px;color:#708293}.chip{border-radius:999px;display:inline-block;background:#ebf1f6;color:#4c6881;font-weight:700;font-size:11px;padding:5px 9px;margin:3px}.kicker{font-size:11px;letter-spacing:.08em;text-transform:uppercase;color:#0b7d83;font-weight:800;margin:0 0 6px}.result-head{display:flex;align-items:center;justify-content:space-between;gap:10px;margin-bottom:12px}.quiet{color:var(--muted);font-size:12px}.module-links{display:grid;grid-template-columns:repeat(3,1fr);gap:11px}.module-link{background:#f6fafb;border:1px solid #dbe7ed;border-radius:12px;padding:17px;cursor:pointer;text-align:left}.module-link:hover{border-color:#78c5c2;background:#eaf6f4}.module-link b{display:block;color:var(--navy);margin:3px 0}.module-link span{display:block;font-size:12px;color:#637b8d}.mini-tag{background:#e7f4ef;color:#226e56;border-radius:5px;font-size:10px;padding:3px 6px;font-weight:750;display:inline-block}.sources-foot{font-size:11px;color:#718398;padding-top:10px}.toggle{accent-color:var(--teal)}.print-only{display:none}
+    @media(max-width:1240px){.shell{grid-template-columns:225px minmax(0,1fr)}.summary-side{grid-column:2;position:static}.summary-side .sidecard{max-height:none}.summary-side .recs{display:grid;grid-template-columns:repeat(2,minmax(0,1fr))}.banner h1{font-size:25px}}
+    @media(max-width:820px){.topin{padding:15px 16px}.site-title{font-size:18px}.mini-meta{display:none}.shell{display:block;padding:14px 14px 35px}.sidebar{position:static;margin-bottom:15px}.sidebar .sidecard{padding:9px}.mobile-nav-hint{display:block;text-align:right;font-size:10px;color:#718399;margin:3px 8px 0}.navhead,.side-note,.sidebar .privacy{display:none}.navs{display:flex;gap:6px;overflow:auto;scrollbar-width:thin}.nav-btn{white-space:nowrap;width:auto;min-width:max-content;margin:0;padding:8px 10px;font-size:12px}.nav-btn .num{width:21px;min-width:21px;height:21px}.summary-side{margin-top:15px}.banner{padding:22px;margin-bottom:13px}.banner h1{font-size:24px}.section{padding:18px;margin-bottom:14px}.form-grid{grid-template-columns:1fr 1fr}.module-links{grid-template-columns:1fr}.summary-side .recs{grid-template-columns:1fr}}
+    @media(max-width:540px){.form-grid,.check-grid,.radio-row,.stats{grid-template-columns:1fr}.site-title{font-size:16px}.identity{gap:9px}.logo{width:40px;height:40px;border-radius:11px}.banner h1{font-size:22px}.banner p{font-size:13px}.topin{gap:5px}.tag.draft{display:none}.rec-top{display:block}.rec-level{display:block;margin-top:2px}}
+    @media print{*{-webkit-print-color-adjust:exact;print-color-adjust:exact}body{background:white;font-size:11px}.top,.sidebar,.banner,.alertline,.summary-side,.footer,.noprint,.view,.btn{display:none!important}.shell{display:block;padding:0}.main{display:block}.view#summary{display:block!important}.panel{border:0;box-shadow:none}.section{padding:8px 0;margin:0}.section h2{font-size:17px}.rec{break-inside:avoid}.print-only{display:block}.reference{break-inside:avoid}}
+  
+
+/* Unified v0.2 detailed SGLT2 module */
+.sglt-step{font-size:12px;color:#08787f;letter-spacing:.045em;text-transform:uppercase;font-weight:850;margin:21px 0 13px}
+.sglt-infobar{padding:12px 15px;border-radius:11px;background:#eef7fa;border:1px solid #cbdfea;color:#264d68;margin:12px 0;font-size:13px}
+.sglt-profile{display:grid;grid-template-columns:1fr 220px;align-items:center;gap:14px;padding:13px 15px;border:1px solid #dae7ef;border-radius:11px;background:#f8fbfd;margin:14px 0}
+.sglt-check{display:flex;gap:10px;align-items:flex-start;padding:11px 12px;border:1px solid #dce7ef;border-radius:10px;background:#f8fbfd;cursor:pointer;font-size:13px;line-height:1.4}
+.sglt-check:has(input:checked){background:#eaf6f3;border-color:#82c8c0}
+.sglt-check input{flex-shrink:0;width:17px;height:17px;accent-color:#087f80;margin:2px 0 0}
+.sglt-check small{display:block;color:#657d8d;margin-top:3px}
+.sglt-negative{margin-top:11px;border-left:4px solid #0b8584}
+.sglt-note{font-size:12px;color:#794f14;background:#fff8ed;border:1px solid #edd5ab;border-radius:11px;padding:12px 14px;margin:12px 0}
+.sglt-result{border:1px solid #d1dfe9;border-left:6px solid #7d96ad;border-radius:13px;padding:16px;background:#f6f9fc}
+.sglt-result.red{border-left-color:#c6444c;background:#fff3f2}.sglt-result.amber{border-left-color:#cb8927;background:#fff9ee}.sglt-result.green{border-left-color:#118461;background:#f0fbf6}
+.sglt-result h3{font-size:17px;margin:8px 0;color:var(--navy)}.sglt-result p{font-size:13px;margin:7px 0}
+.sglt-result-head{display:flex;align-items:center;justify-content:space-between;gap:8px;flex-wrap:wrap}.sglt-result ul{padding-left:22px;font-size:12px;margin:8px 0 0}.sglt-result li{margin:6px 0}
+.sglt-trace{display:grid;grid-template-columns:1fr 1fr;gap:9px 16px;margin-top:11px}.sglt-trace>div{padding:8px 0;border-bottom:1px solid #e6eef3;font-size:12px;min-width:0;overflow-wrap:anywhere}.sglt-trace strong{display:block;color:#294963}.sglt-trace span{color:#536c80}
+.sglt-table-wrap{overflow-x:auto}.sglt-table{width:100%;border-collapse:collapse;font-size:12px;min-width:450px;margin:15px 0}.sglt-table td,.sglt-table th{border:1px solid #d5e2eb;padding:10px;text-align:left}.sglt-table th{background:#eef4f8;color:#1b3a54}.sglt-bullets{font-size:12px;color:#4a6075;padding-left:19px}.sglt-bullets li{margin:8px 0}
+@media(max-width:700px){.sglt-profile{grid-template-columns:1fr}.sglt-trace{grid-template-columns:1fr}}
+@media print{.sglt-result{break-inside:avoid}.sglt-table{min-width:0}}
+
+</style>
+</head>
+<body>
+<header class="top"><div class="topin">
+  <div class="identity"><div class="logo" aria-hidden="true">✚</div><div><div class="eyebrow">Anesthesia clinical pathways</div><div class="site-title">Diabetes, GLP-1 & SGLT2 Perioperative Guide</div></div></div>
+  <div class="mini-meta"><span class="tag draft">DRAFT · Clinical validation required</span><br>Prototype v0.2 · 22 Nov 2026 · Offline-first</div>
+</div></header>
+<div class="shell">
+  <aside class="sidebar"><div class="sidecard"><div class="navhead">Assessment modules</div><nav class="navs" aria-label="Guide sections">
+    <button class="nav-btn active" data-view="overview"><span class="num">1</span> Start & profile</button>
+    <button class="nav-btn" data-view="diabetes"><span class="num">2</span> Diabetes medications</button>
+    <button class="nav-btn" data-view="glp"><span class="num">3</span> GLP-1 / aspiration</button>
+    <button class="nav-btn" data-view="sglt"><span class="num">4</span> SGLT2 / eDKA</button>
+    <button class="nav-btn" data-view="summary"><span class="num">5</span> Review & references</button>
+  </nav><div class="mobile-nav-hint">Swipe to see all five steps →</div><div class="side-note">A structured reference, not an order set or surgical clearance engine. All decisions require clinician judgment and approved local protocols.</div><div class="privacy">🔒 Inputs stay in this browser session. No network requests, tracking, saved patient data, or EHR connection.</div></div></aside>
+  <main class="main">
+    <div class="banner"><small>Preoperative medicine · Interactive workflow</small><h1>One assessment. Three connected medication pathways.</h1><p>Review glycemic safety, diabetes medications, GLP-1–related gastric emptying concerns, and SGLT2-associated ketoacidosis risk. Decisions remain with the treating clinical team.</p></div>
+    <div class="alertline"><span aria-hidden="true">⚠</span><div><strong>Demonstration only — not approved for clinical care.</strong> The guide does not provide insulin dosing, DKA diagnosis, medication orders, or automatic “proceed” clearance. Local review is required, especially for fasting instructions and conflicting source recommendations.</div></div>
+
+    <section id="overview" class="view active">
+      <div class="panel section">
+        <div class="kicker">Step 1 of 5 · Clinical context</div><h2>Patient & procedure profile</h2><p class="sub">Use hypothetical cases while testing. Avoid identifiers or clinical documentation in this prototype.</p>
+        <div class="form-grid">
+          <div class="field"><label for="diabetesType">Diabetes status</label><select id="diabetesType"><option value="unknown">Not recorded</option><option value="type1">Type 1 diabetes</option><option value="type2">Type 2 diabetes</option><option value="none">No diagnosed diabetes</option><option value="other">Other / uncertain type</option></select></div>
+          <div class="field"><label for="urgency">Surgical urgency</label><select id="urgency"><option value="unknown">Not recorded</option><option value="elective">Elective / scheduled</option><option value="urgent">Urgent</option><option value="emergency">Emergency</option></select></div>
+          <div class="field"><label for="anesthesiaType">Planned anesthesia</label><select id="anesthesiaType"><option value="unknown">Not recorded</option><option value="general">General anesthesia</option><option value="deep">Deep sedation / MAC</option><option value="regional">Neuraxial / regional with possible sedation</option><option value="local">Local, no sedation anticipated</option></select></div>
+          <div class="field"><label for="nutrition">Oral intake status</label><select id="nutrition"><option value="unknown">Not recorded</option><option value="npo">NPO / fasting</option><option value="normal">Eating normally</option><option value="poor">Poor intake / prolonged fasting</option></select></div>
+          <div class="field"><label for="glucose">Point-of-care glucose (mg/dL)</label><input type="number" id="glucose" placeholder="Optional" min="0" max="1200" step="1" /><div class="hint">2026 ADA perioperative reference range: 100–180 mg/dL.</div></div>
+          <div class="field"><label for="a1c">Recent HbA1c (%)</label><input type="number" id="a1c" placeholder="Optional" min="3" max="20" step="0.1" /><div class="hint">Planning data; not a standalone cancellation criterion.</div></div>
+        </div>
+        <div class="nextbar"><button class="btn primary" data-jump="diabetes">Continue to medication review →</button><button class="btn" id="resetAll">Reset all selections</button></div>
+      </div>
+      <div class="panel section"><h2>Explore a pathway</h2><p class="sub">Modules work together. If a medication class is relevant, select it under Diabetes Medications and complete the matching detailed pathway.</p>
+        <div class="module-links"><button class="module-link" data-jump="diabetes"><span class="mini-tag">MEDICATIONS</span><b>Diabetes / insulin</b><span>Basal insulin, pumps, metformin, sulfonylureas, glucose planning</span></button><button class="module-link" data-jump="glp"><span class="mini-tag">ASPIRATION</span><b>GLP-1 medications</b><span>Symptoms, escalation, gastric emptying, shared decision-making</span></button><button class="module-link" data-jump="sglt"><span class="mini-tag">KETOACIDOSIS</span><b>SGLT2 inhibitors</b><span>Full missed-hold pathway, ketones, acid-base testing and eDKA escalation</span></button></div>
+      </div>
+    </section>
+
+    <section id="diabetes" class="view">
+      <div class="panel section"><div class="kicker">Step 2 of 5 · Medication reconciliation</div><h2>Diabetes medications & devices</h2><p class="sub">Select every medication class in the regimen. The tool displays guidance for review, not individualized dose instructions.</p>
+        <div class="check-grid" id="medGrid">
+          <label class="check-card"><input type="checkbox" value="basal"><span><b>Long-acting basal insulin</b><small>Glargine, degludec, detemir</small></span></label>
+          <label class="check-card"><input type="checkbox" value="nph"><span><b>NPH insulin</b><small>Intermediate acting</small></span></label>
+          <label class="check-card"><input type="checkbox" value="mealtime"><span><b>Mealtime / rapid insulin</b><small>Lispro, aspart, regular insulin</small></span></label>
+          <label class="check-card"><input type="checkbox" value="pump"><span><b>Insulin pump / automated delivery</b><small>CSII, AID, CGM, closed-loop systems</small></span></label>
+          <label class="check-card"><input type="checkbox" value="metformin"><span><b>Metformin</b><small>Glucophage, generic</small></span></label>
+          <label class="check-card"><input type="checkbox" value="sulfonylurea"><span><b>Sulfonylurea</b><small>Glipizide, glimepiride, glyburide</small></span></label>
+          <label class="check-card"><input type="checkbox" value="dpp4"><span><b>DPP-4 inhibitor</b><small>Sitagliptin, linagliptin</small></span></label>
+          <label class="check-card"><input type="checkbox" value="tzd"><span><b>Thiazolidinedione</b><small>Pioglitazone</small></span></label>
+          <label class="check-card"><input type="checkbox" value="glp"><span><b>GLP-1 / GIP-GLP-1 drug</b><small>Ozempic, Wegovy, Mounjaro, Zepbound</small></span></label>
+          <label class="check-card"><input type="checkbox" value="sglt"><span><b>SGLT2 inhibitor</b><small>Jardiance, Farxiga, Invokana, Steglatro</small></span></label>
+        </div>
+        <details class="details"><summary>Insulin dose guidance: what is deliberately excluded?</summary><p>The ADA 2026 standards contain general suggestions for some preoperative insulin dose adjustments. This prototype does not calculate or prescribe doses; reductions, pump settings, correction scales, and infusion plans must be governed by patient-specific orders and an institutional protocol. Basal insulin must not be inadvertently omitted in type 1 diabetes.</p></details>
+        <div class="nextbar"><button class="btn primary" data-jump="glp">Review GLP-1 pathway →</button><button class="btn" data-jump="summary">See assessment summary</button></div>
+      </div>
+    </section>
+
+    <section id="glp" class="view">
+      <div class="panel section"><div class="kicker">Step 3 of 5 · GLP-1 / aspiration</div><h2>GLP-1 and dual GIP/GLP-1 medications</h2><p class="sub">Guidelines increasingly favor individualized continuation with aspiration-risk assessment, not a universal one-week medication hold.</p>
+        <div class="form-grid">
+          <div class="field"><label for="glpDrug">Medication</label><select id="glpDrug"><option value="none">No GLP-1 medication selected</option><option value="semaglutideWeekly">Semaglutide weekly — Ozempic / Wegovy</option><option value="semaglutideOral">Semaglutide oral — Rybelsus</option><option value="tirzepatide">Tirzepatide — Mounjaro / Zepbound</option><option value="dulaglutide">Dulaglutide — Trulicity</option><option value="liraglutide">Liraglutide daily — Victoza / Saxenda</option><option value="other">Other GLP-1 / dual agonist</option></select></div>
+          <div class="field"><label for="glpPhase">Current therapy phase</label><select id="glpPhase"><option value="unknown">Unknown</option><option value="stable">Stable maintenance dose</option><option value="escalating">New start / dose escalation</option><option value="high">High dose or recent dose increase</option></select></div>
+          <div class="field"><label for="glpSymptoms">Current gastrointestinal symptoms</label><select id="glpSymptoms"><option value="unknown">Not assessed</option><option value="none">No concerning GI symptoms</option><option value="mild">Mild symptoms (e.g., early satiety, constipation)</option><option value="severe">Significant symptoms: severe nausea, persistent vomiting, cannot tolerate intake</option></select></div>
+          <div class="field"><label for="glpOther">Other cause of delayed gastric emptying</label><select id="glpOther"><option value="unknown">Not assessed</option><option value="no">No known additional factor</option><option value="yes">Yes — gastroparesis, dysmotility, Parkinson disease, etc.</option></select></div>
+          <div class="field"><label for="liquid24">Preoperative 24-hour liquid/clear-liquid plan</label><select id="liquid24"><option value="unknown">Not confirmed / policy not set</option><option value="yes">Completed per local policy</option><option value="no">Not completed</option><option value="na">Not applicable per approved local plan</option></select><div class="hint">2024 multisociety guidance targets higher-risk patients; 2025 SPAQI suggests clear liquids for all GLP-1 users. Do not silently substitute one protocol for the other.</div></div>
+          <div class="field"><label for="glpFasting">Standard facility fasting requirements</label><select id="glpFasting"><option value="unknown">Not verified</option><option value="met">Verified per facility policy</option><option value="notmet">Not met / unclear</option></select></div>
+        </div>
+        <div class="divider"></div><h3>Clinical risk factors (select if present)</h3>
+        <div class="check-grid"><label class="check-card"><input id="otherAsp" type="checkbox"><span><b>Additional aspiration concerns</b><small>Reflux, prior retained gastric contents, other clinical concerns</small></span></label><label class="check-card"><input id="prolongedFasting" type="checkbox"><span><b>Prolonged fasting / poor intake</b><small>Coordinate nutrition and glycemic plan</small></span></label></div>
+        <div class="nextbar"><button class="btn primary" data-jump="sglt">Review SGLT2 pathway →</button><button class="btn" data-jump="summary">See assessment summary</button></div>
+      </div>
+      <div class="panel section"><h2>Why GLP-1 decisions are individualized</h2><p class="sub">Risk assessment considers GI symptoms, dose escalation, dose and formulation, urgency, coexisting gastric motility conditions, and anesthesia plan.</p>
+        <div class="rec info"><div class="rec-title">2024 multisociety approach</div><p>Most lower-risk patients may continue GLP-1 therapy. Elevated-risk patients may benefit from a liquid-only diet for at least 24 hours, gastric ultrasound where available, and modified anesthesia planning.</p><div class="source">Source: multisociety practice guidance (2024).</div></div>
+        <div class="rec review" style="margin-top:11px"><div class="rec-title">2025 SPAQI approach</div><p>Recommends continuation without significant GI symptoms, with a clear-liquid fasting approach for 24 hours before procedures requiring anesthesia. This is more prescriptive than the 2024 high-risk–targeted dietary approach.</p><div class="source">Source: SPAQI multidisciplinary consensus (2025).</div></div>
+      </div>
+    </section>
+
+    <section class="view" id="sglt">
+  <div class="panel section">
+    <div class="kicker">Step 4 of 5 · Full SGLT2 / eDKA pathway</div>
+    <h2>SGLT2 inhibitors &amp; perioperative euglycemic DKA</h2>
+    <p class="sub">Integrated from the standalone SGLT2 guide. Review the medication hold, urgency, symptoms, risk modifiers, ketones and acid-base results. This pathway <strong>does not issue surgical clearance.</strong></p>
+    <div class="alertline"><strong>Safety first:</strong> symptoms or abnormal ketone / acid-base findings trigger clinical escalation regardless of glucose or the number of days since the last dose. The source's borderline and “and/or” lab rules are not treated as clearance criteria.</div>
+    <div class="sglt-step">01 · Medication &amp; procedure</div>
+    <div class="form-grid">
+      <div class="field"><label for="sgltDrug">SGLT2 medication</label><select id="sgltDrug">
+        <option value="none">No SGLT2 medication selected</option>
+        <option value="empagliflozin">Empagliflozin — Jardiance</option>
+        <option value="dapagliflozin">Dapagliflozin — Farxiga</option>
+        <option value="canagliflozin">Canagliflozin — Invokana</option>
+        <option value="ertugliflozin">Ertugliflozin — Steglatro</option>
+        <option value="bexagliflozin">Bexagliflozin — Brenzavvy</option>
+        <option value="other">Other / combination product</option>
+      </select><div class="hint">For combination tablets, identify every active ingredient separately.</div></div>
+      <div class="field"><label for="sgltDays">Complete 24-hour days since last dose</label><input id="sgltDays" type="number" min="0" max="90" step="0.1" placeholder="Leave blank if unknown" inputmode="decimal"><div class="hint">Verify the actual last administration. The interval is not a clinical clearance test.</div></div>
+    </div>
+    <div class="sglt-infobar" id="sgltHoldReference" aria-live="polite">Select an SGLT2 inhibitor to see its reference hold time.</div>
+    <div class="sglt-profile">
+      <div><strong>Procedure urgency:</strong> <span id="sgltUrgencyLabel">Not recorded</span><div class="hint">Shared with Patient &amp; Procedure Profile — editing here updates the same field.</div></div>
+      <div class="field"><label for="sgltUrgencyEditor">Change urgency</label><select id="sgltUrgencyEditor"><option value="unknown">Not recorded</option><option value="elective">Elective / scheduled</option><option value="urgent">Necessary / urgent</option><option value="emergency">Emergency</option></select></div>
+    </div>
+    <label class="sglt-check"><input id="sgltVeryLow" type="checkbox"><span>Very brief, low-risk procedure (&lt;45 min) with early oral intake expected. <small>The uploaded source mentions this as a possible exception to elective rescheduling; it is <strong>not automated</strong>.</small></span></label>
+    <div class="divider"></div>
+    <div class="sglt-step">02 · Symptoms &amp; risk factors</div>
+    <h3>Screen for symptoms of possible ketoacidosis</h3>
+    <p class="sub">Select any present symptoms. If none are present, explicitly mark the screen negative; otherwise it remains <strong>not assessed</strong>.</p>
+    <div class="check-grid" id="sgltSymptomChecks">
+      <label class="sglt-check"><input type="checkbox" value="Nausea or vomiting"><span>Nausea or vomiting</span></label>
+      <label class="sglt-check"><input type="checkbox" value="Abdominal pain"><span>Abdominal pain</span></label>
+      <label class="sglt-check"><input type="checkbox" value="Tachypnea / Kussmaul breathing"><span>Tachypnea / Kussmaul breathing</span></label>
+      <label class="sglt-check"><input type="checkbox" value="Lethargy / altered mental status"><span>Lethargy, confusion, altered mental status</span></label>
+      <label class="sglt-check"><input type="checkbox" value="Tachycardia or hypotension"><span>Unexplained tachycardia / hypotension</span></label>
+    </div>
+    <label class="sglt-check sglt-negative"><input id="sgltNoSymptoms" type="checkbox"><span>Symptom screen completed — no concerning symptoms identified</span></label>
+    <h3>Additional eDKA risk modifiers</h3>
+    <div class="check-grid" id="sgltRiskChecks">
+      <label class="sglt-check"><input type="checkbox" value="Bowel preparation / colonoscopy"><span>Bowel prep / colonoscopy</span></label>
+      <label class="sglt-check"><input type="checkbox" value="Prolonged fasting / reduced carbohydrates"><span>Prolonged fasting or low carbohydrate intake</span></label>
+      <label class="sglt-check"><input type="checkbox" value="Dehydration"><span>Dehydration / volume depletion</span></label>
+      <label class="sglt-check"><input type="checkbox" value="Acute illness / infection"><span>Acute illness / infection</span></label>
+      <label class="sglt-check"><input type="checkbox" value="High surgical stress / prolonged surgery"><span>High surgical stress / prolonged surgery</span></label>
+      <label class="sglt-check"><input type="checkbox" value="Alcohol-related risk"><span>Alcohol-related risk</span></label>
+    </div>
+    <div class="divider"></div>
+    <div class="sglt-step">03 · Ketone and acid-base assessment</div>
+    <p class="sub">For the urgent missed-hold pathway, the uploaded source uses blood ketones, BMP / anion gap and pH. Local test availability and clinical interpretation are essential.</p>
+    <div class="form-grid">
+      <div class="field"><label for="bhb">Serum β-hydroxybutyrate (mmol/L)</label><input id="bhb" type="number" min="0" max="20" step="0.1" placeholder="Not entered" inputmode="decimal"></div>
+      <div class="field"><label for="ag">Anion gap (mEq/L)</label><input id="ag" type="number" min="0" max="60" step="0.1" placeholder="Not entered" inputmode="decimal"></div>
+      <div class="field"><label for="ph">VBG / ABG pH</label><input id="ph" type="number" min="6.5" max="7.9" step="0.01" placeholder="Not entered" inputmode="decimal"></div>
+      <div class="field"><label for="bicarb">Bicarbonate (mmol/L)</label><input id="bicarb" type="number" min="0" max="50" step="0.1" placeholder="Not entered" inputmode="decimal"></div>
+      <div class="field"><label for="sgltLocation">Facility testing capability</label><select id="sgltLocation"><option value="unknown">Not established</option><option value="full">Serum ketones, BMP, and blood gas available</option><option value="poc">Approved point-of-care ketone testing only</option><option value="none">Testing not available</option></select></div>
+    </div>
+    <p class="sglt-note">The supplied decision map uses ketone bands &lt;1.5, 1.5–3, &gt;3 mmol/L and anion gap &gt;14 or pH &lt;7.3. Exactly 1.5 or 3.0, pH 7.3 and discordant acid-base findings require clinician interpretation. None are automated proceed criteria.</p>
+    <div class="divider"></div>
+    <div class="sglt-step">04 · Current SGLT2 decision trace</div>
+    <div class="sglt-result" id="sgltResult" aria-live="polite" role="status">
+      <div class="sglt-result-head"><span class="tag draft" id="sgltStatus">Not evaluated</span><span class="quiet" id="sgltBranch">No selection</span></div>
+      <h3 id="sgltResultTitle">Select a medication</h3>
+      <p id="sgltResultBody">Choose the drug, then review its last dose, symptoms and available data.</p>
+      <ul id="sgltResultActions"></ul>
+    </div>
+    <details class="details"><summary>Show decision trace / entered values</summary><div class="sglt-trace" id="sgltTrace"></div></details>
+    <div class="divider"></div>
+    <div class="sglt-step">05 · Postoperative planning</div>
+    <div class="check-grid" id="sgltPostChecks">
+      <label class="sglt-check"><input type="checkbox" value="Pre- and postoperative metabolic monitoring reviewed"><span>Pre- and postoperative metabolic monitoring reviewed</span></label>
+      <label class="sglt-check"><input type="checkbox" value="Intraoperative reassessment for cases longer than 4 hours"><span>Intraoperative reassessment if case &gt;4 h</span></label>
+      <label class="sglt-check"><input type="checkbox" value="Hydration and carbohydrate intake plan"><span>Hydration and carbohydrate intake plan</span></label>
+      <label class="sglt-check"><input type="checkbox" value="Symptom surveillance and escalation plan"><span>Symptom surveillance and escalation plan</span></label>
+      <label class="sglt-check"><input type="checkbox" value="SGLT2 restart review by treating team"><span>SGLT2 restart review by treating team</span></label>
+    </div>
+    <div class="nextbar"><button class="btn primary" data-jump="summary">View integrated clinical summary →</button></div>
+  </div>
+  <div class="panel section">
+    <details class="details"><summary>Medication hold table and source laboratory branches</summary>
+      <div class="sglt-table-wrap"><table class="sglt-table"><thead><tr><th>Drug</th><th>Brand example</th><th>Reference hold</th></tr></thead><tbody>
+        <tr><td>Canagliflozin</td><td>Invokana</td><td>3 days</td></tr><tr><td>Dapagliflozin</td><td>Farxiga</td><td>3 days</td></tr><tr><td>Empagliflozin</td><td>Jardiance</td><td>3 days</td></tr><tr><td>Bexagliflozin</td><td>Brenzavvy</td><td>3 days</td></tr><tr><td>Ertugliflozin</td><td>Steglatro</td><td>4 days</td></tr>
+      </tbody></table></div>
+      <p class="quiet">Source: uploaded SGLT2 inhibitor presentation, slide 9. Any other active ingredient requires separate review.</p>
+      <ul class="sglt-bullets"><li>Missed elective hold: the source favors rescheduling, with exceptional brief procedures reviewed individually.</li><li>Missed hold with necessary/urgent surgery: obtain ketones and appropriate metabolic assessment.</li><li>Ketones &lt;1.5 mmol/L: lower biochemical concern in source map, not clearance.</li><li>Ketones 1.5–3 mmol/L: check anion gap and pH; exact boundaries and discordance need clinical review.</li><li>Ketones &gt;3 mmol/L, anion gap &gt;14 mEq/L, pH &lt;7.3, or low bicarbonate: evaluate for ketoacidosis.</li><li>Symptoms can override reassuring lab results; glucose alone is insufficient to exclude euglycemic DKA.</li></ul>
+    </details>
+    <details class="details"><summary>Implementation approval checklist and QI metrics</summary>
+      <p>For institution-wide deployment, anesthesia/endocrinology/pharmacy must approve:</p><ul class="sglt-bullets">
+        <li>Elective exception and rescheduling rules; procedure and fasting considerations.</li>
+        <li>Exact values of 1.5 and 3.0 mmol/L; discordant anion gap and pH, and the “and/or” source wording.</li>
+        <li>Point-of-care versus serum ketone testing and facility capability.</li>
+        <li>Management of emergency cases, monitoring frequency, disposition and restart criteria.</li>
+      </ul>
+      <p class="quiet">Potential QI measures: on-time drug holds, missed-hold rescheduling, urgent-case metabolic assessment, postoperative eDKA, unplanned admissions, and follow-up.</p>
+    </details>
+  </div>
+</section>
+
+    <section id="summary" class="view"><div class="panel section"><div class="print-only"><h1>Perioperative Diabetes, GLP-1 & SGLT2 — Assessment Summary</h1><p>Prototype v0.2, 22 Nov 2026. For demonstration and clinical review only. Not a clearance or medication order.</p></div>
+      <div class="kicker">Step 5 of 5 · Review</div><div class="result-head"><div><h2>Assessment summary</h2><p class="sub">Synthesized reference statements based on the selected factors. No automatic clearance.</p></div><span class="tag draft noprint">DRAFT</span></div>
+      <div id="summaryFacts" class="stats"></div><h3>Review items</h3><div id="fullRecs" class="recs"></div>
+      <div class="sglt-summary-block" id="sgltSummaryBlock" style="display:none;margin-top:20px">
+    <h3>SGLT2 detailed pathway · source-specific decision trace</h3>
+    <div id="sgltSummaryDetail" class="recs"></div>
+  </div>
+  <div class="nextbar noprint">
+   <button class="btn primary" id="printBtn">Print summary</button><button class="btn" id="copyBtn">Copy summary</button><button class="btn" data-jump="overview">Edit selections</button></div><div id="copyStatus" class="quiet noprint" role="status" aria-live="polite"></div>
+    </div>
+    <div class="panel section"><h2>References & governance</h2><p class="sub">Independent summaries of public professional guidance. The exact clinical rules and patient instructions require local approval.</p>
+      <ol class="ref-list">
+   <li><strong>Uploaded source:</strong> <em>SGLT2 Inhibitors — Euglycemic Diabetic Ketoacidosis</em> presentation, especially slides 6, 9–13. Detailed drug timing, missed-hold branches, and thresholds are attributed to this source; this implementation is independently designed and clinically unvalidated.</li><li><a href="https://diabetesjournals.org/care/article/49/Supplement_1/S339/163925/16-Diabetes-Care-in-the-Hospital-Standards-of-Care" target="_blank" rel="noopener noreferrer">ADA Standards of Care in Diabetes—2026, Section 16</a>. Perioperative glycemic target, insulin, oral drugs, SGLT2 inhibitors, individualized GLP-1 management.</li>
+      <li><a href="https://pmc.ncbi.nlm.nih.gov/articles/PMC11666732/" target="_blank" rel="noopener noreferrer">Multisociety GLP-1 clinical practice guidance (2024)</a>. Patient-specific continuation, risk factors, liquid diet when elevated risk, aspiration mitigation.</li>
+      <li><a href="https://pmc.ncbi.nlm.nih.gov/articles/PMC12597468/" target="_blank" rel="noopener noreferrer">SPAQI multidisciplinary GLP-1 consensus (2025)</a>. Continuation without significant GI symptoms, differing fasting approach, reinstitution.</li>
+      <li><a href="https://www.jacc.org/doi/full/10.1016/j.jacc.2026.06.017" target="_blank" rel="noopener noreferrer">2026 AHA/ACC perioperative cardiovascular guideline reaffirmation</a>. Additional considerations for diabetes therapy, including an approach to metformin that differs from ADA guidance.</li></ol>
+      <div class="rec review" style="margin-top:15px"><div class="rec-title">Institutional policy decisions needed</div><p>GLP-1 liquid diet for high-risk patients versus all patients; GLP-1 hold/restart process; metformin policy; insulin and pump orders; day-of-surgery glucose monitoring and treatment; SGLT2 missed-hold testing and urgent-case escalation; implementation in ambulatory sites.</p></div>
+      <p class="sources-foot">Clinical rules are abbreviated and will not cover all product-label, contraindication, pregnancy, pediatric, inpatient, or disease-specific exceptions. No treatment can be authorized based on this prototype alone.</p>
+    </div></section>
+  </main>
+  <aside class="summary-side"><div class="sidecard"><div class="result-head"><h2>Live clinical review</h2><span class="tag">Updated as you select</span></div><p class="quiet">Key items arising from your current selections</p><div id="quickRecs" class="recs"></div><div class="nextbar"><button class="btn primary" data-jump="summary">View full summary →</button></div></div></aside>
+</div>
+<footer class="footer">© Independent educational prototype · v0.1, 22 Nov 2026 · Developed as a local browser reference. No professional society or hospital endorsement. Do not enter patient-identifying information.</footer>
+<script>
+(() => {
+  'use strict';
+  const $ = id => document.getElementById(id);
+  const get = id => $(id).value;
+  const numeric = id => {const v=$(id).value.trim(); return v===''?null:Number(v)};
+  const selected = () => Array.from(document.querySelectorAll('#medGrid input:checked')).map(x=>x.value);
+  const selectedLabel = (selector) => {const e=$(selector);return e.options[e.selectedIndex]?.textContent || ''};
+  const ref = {ada:'ADA 2026, Section 16',multi:'Multisociety GLP-1 guidance (2024)',spaqi:'SPAQI GLP-1 consensus (2025)',aha:'AHA/ACC cardiovascular guideline reaffirmation (2026)',local:'Institutional review required'};
+  const out=(level,title,message,source) => ({level,title,message,source});
+  const format = x => x===null?'not recorded':String(x);
+  const sanitize=(s)=>String(s).replace(/[&<>\"']/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','\"':'&quot;',"'":'&#39;'}[c]));
+
+  // Integrated detailed SGLT2 evaluator adapted from the previously-built standalone tool.
+  // All source thresholds remain reference-only; no automatic "proceed" clearance is issued.
+  const sgltDrugs={empagliflozin:['Empagliflozin (Jardiance)',3],dapagliflozin:['Dapagliflozin (Farxiga)',3],canagliflozin:['Canagliflozin (Invokana)',3],bexagliflozin:['Bexagliflozin (Brenzavvy)',3],ertugliflozin:['Ertugliflozin (Steglatro)',4]};
+  const selectedChecks=id=>Array.from(document.querySelectorAll('#'+id+' input:checked')).map(e=>e.value);
+  let sgltCurrent={tone:'neutral',label:'Not assessed',title:'Select a medication',body:'',actions:[],branch:'Unselected'};
+  function sgltData(){
+    return {drug:get('sgltDrug'),days:numeric('sgltDays'),urgency:get('urgency'),veryLow:$('sgltVeryLow').checked,
+    symptoms:selectedChecks('sgltSymptomChecks'),screenNegative:$('sgltNoSymptoms').checked,risks:selectedChecks('sgltRiskChecks'),
+    bhb:numeric('bhb'),gap:numeric('ag'),ph:numeric('ph'),bicarb:numeric('bicarb'),location:get('sgltLocation'),post:selectedChecks('sgltPostChecks')};
+  }
+  function sgltEvaluate(s){
+    const result=(tone,label,title,body,actions,branch)=>({tone,label,title,body,actions,branch});
+    const drug=sgltDrugs[s.drug],symptoms=s.symptoms.length>0,screened=s.screenNegative||symptoms;
+    const acid=(s.gap!==null&&s.gap>14)||(s.ph!==null&&s.ph<7.3)||(s.bicarb!==null&&s.bicarb<18);
+    const highKet=s.bhb!==null&&s.bhb>3;
+    const boundaries=(s.bhb!==null&&(s.bhb===1.5||s.bhb===3))||s.ph===7.3||s.bicarb===18;
+    if(symptoms)return result('red','Urgent clinical evaluation','Symptoms concerning for ketoacidosis','Symptoms require evaluation regardless of glucose, medication hold, or a single reassuring test result.',[
+      'Escalate promptly to the anesthesia/medical team and evaluate for possible DKA/euglycemic DKA.',
+      'In ambulatory care, use the local emergency response / transfer pathway.',
+      'For life-saving surgery, stabilization and operative timing require a named clinical team.' ],'Symptom override');
+    if(highKet||acid)return result('red','High biochemical concern','Abnormal ketones or acid-base findings','At least one entered measurement crosses the source’s concerning thresholds. This is not a standalone DKA diagnosis.',[
+      'Promptly review blood ketones, bicarbonate, anion gap, blood gas and clinical status.',
+      'Do not use a normal result on a different test to offset an abnormal result.',
+      'For emergency operations, coordinate stabilization, monitoring, and timing with the treating team.' ],'Biochemical escalation');
+    if(s.drug==='none')return result('neutral','Not assessed','Select an SGLT2 medication','Select a specific medication to apply the detailed SGLT2 pathway. If no SGLT2 drug is relevant, continue with the other modules.',[], 'No medication selected');
+    if(!drug)return result('amber','Medication verification required','Unmapped drug / combination product','The uploaded source gives explicit intervals for five SGLT2 inhibitors. This product needs manual ingredient verification.',[
+      'Verify exact SGLT2 ingredient and other components, then use the institution’s approved medication policy.' ],'Unmapped medication');
+    if(s.days===null)return result('amber','Incomplete medication history','Last-dose interval unknown',`The source reference for ${drug[0]} is ${drug[1]} complete days before scheduled surgery.`,[
+      'Verify actual last dose and whether the case is elective, urgent, or emergency.',
+      'For necessary/urgent cases with unknown interval, review blood ketones and metabolic status.' ],'Unknown last dose');
+    if(boundaries)return result('amber','Boundary value unresolved','Exact source threshold requires interpretation','The uploaded slide deck has unresolved ketone boundaries at exactly 1.5 and 3.0 mmol/L, a pH 7.3 wording inconsistency and/or a bicarbonate value of 18 in its sign list.',[
+      'Do not infer clearance from a boundary measurement.',
+      'Verify laboratory methods, examine the overall acid-base pattern, and obtain clinician review.' ],'Unresolved threshold');
+    if(s.urgency==='unknown')return result('amber','Urgency not recorded','Specify the type of procedure','Elective and necessary/urgent missed-hold pathways are different.',[
+      'Record procedural urgency in the profile or the linked selector above.' ],'Urgency missing');
+    const held=s.days>=drug[1];
+    if(held){
+      if(s.bhb!==null&&s.bhb>=1.5)return result('amber','Clinical review required','Hold interval met but ketones elevated','Holding the medication does not eliminate eDKA risk.',[
+        'Review fasting, intercurrent illness, ketone trend, acid-base results and clinical status.' ],'Hold met / elevated ketones');
+      if(!screened)return result('amber','Symptom screen incomplete','Hold interval met; screen for symptoms',`Reported ${s.days} complete day(s) since ${drug[0]} (reference hold ${drug[1]} days). The symptom screen is not marked as completed.`,[
+        'Complete the symptom screen before interpreting the medication hold as reassuring.',
+        'A documented hold interval alone does not establish procedural safety.' ],'Hold met / symptoms unassessed');
+      return result('green','Hold interval documented',`${drug[1]}-day source hold interval met`,`Reported ${s.days} complete day(s) since the last dose of ${drug[0]}. This meets the source interval but is NOT a safety clearance.`,[
+        'Continue independent pre-anesthetic evaluation, including risks from fasting or illness.',
+        'Plan monitoring and medication restart review; consider additional metabolic assessment if risks are present.' ],'Hold met / not clearance');
+    }
+    if(s.urgency==='elective')return result('amber','Missed elective hold','Elective procedure: hold shorter than source recommendation',`Reported ${s.days} complete days; the source recommends ${drug[1]} days for ${drug[0]}. The source generally favors rescheduling when the hold was missed.`,[
+      'Discuss rescheduling or an institution-approved exception with anesthesia and the procedural team.',
+      s.veryLow?'A brief low-risk procedure exception was flagged; it still requires explicit clinician approval.':'Assess fasting, concurrent illness, procedure stress and any exceptions.' ],'Elective / missed hold');
+    if(s.location==='none'||s.location==='unknown')return result('red','Testing capability must be established','Necessary surgery with missed hold — testing access unresolved','The source urgent pathway requires blood ketone and metabolic evaluation.',[
+      'Confirm appropriate ketone, chemistry/anion gap and blood-gas testing capability.',
+      'Escalate for a named team plan when urgent or life-saving surgery cannot wait.' ],'Urgent / testing unavailable or unknown');
+    if(s.bhb===null)return result('amber','Laboratory assessment needed','Necessary/urgent procedure with missed hold',`Reported ${s.days} days, versus ${drug[1]} source reference days.`,[
+      'Obtain serum or locally approved point-of-care ketones; consider BMP, bicarbonate, anion gap and VBG/ABG.',
+      'Establish intra- and postoperative monitoring and nutrition plans.',
+      'Do not automatically delay a life-saving emergency from this guide.' ],'Urgent / ketones needed');
+    if(s.bhb<1.5)return result('amber','Lower biochemical concern — clinician review','Ketones below 1.5 mmol/L','The original slide’s urgent branch directs consideration of proceeding. This prototype does not issue permission to proceed.',[
+      'Confirm clinical stability, negative symptom screen and testing capability.',
+      'Review acid-base status and a monitoring/feeding plan.' ],'Urgent / ketones below 1.5');
+    if(s.gap===null||s.ph===null)return result('amber','Intermediate ketones — review','Ketones 1.5–3 mmol/L with missing acid-base tests','The source requests anion gap and/or pH; the “and/or” wording does not resolve discordant results.',[
+      'Obtain and review both anion gap and pH when feasible, plus bicarbonate.',
+      'Do not infer clearance from a partial result.' ],'Urgent / intermediate ketones / missing labs');
+    return result('amber','Clinician review required','Intermediate ketones, no flagged gap/pH entered','Entered values do not cross the flagged gap/pH limits, but do not establish that surgery is safe.',[
+      'Obtain a named medical/anesthesia decision after assessing symptoms, nutrition and laboratory trends.',
+      'Document perioperative monitoring and postoperative intake plans.' ],'Urgent / intermediate ketones / review');
+  }
+  function renderSglt(){
+    const s=sgltData(),r=sgltEvaluate(s);sgltCurrent=r;
+    const drug=sgltDrugs[s.drug];
+    $('sgltUrgencyEditor').value=s.urgency;
+    $('sgltUrgencyLabel').textContent=selectedLabel('urgency');
+    $('sgltHoldReference').innerHTML=drug?`<strong>${sanitize(drug[0])}</strong> — source hold: <strong>${drug[1]} complete days</strong> before elective surgery. <span class="quiet">Uploaded presentation, slide 9. Reference only.</span>`:s.drug==='other'?'Unmapped drug/combination product — verify the exact active ingredients and local instructions.':'Select a medication to display a reference interval.';
+    $('sgltResult').className='sglt-result '+r.tone;
+    $('sgltStatus').textContent=r.label;$('sgltBranch').textContent=r.branch;
+    $('sgltResultTitle').textContent=r.title;$('sgltResultBody').textContent=r.body;
+    $('sgltResultActions').innerHTML=r.actions.map(a=>`<li>${sanitize(a)}</li>`).join('');
+    let lines=[['Medication',drug?drug[0]:(s.drug==='other'?'Other / combination':'Not selected')],['Days since last dose',s.days===null?'Unknown':s.days+' days'],['Procedure urgency',selectedLabel('urgency')],['Symptom screen',s.symptoms.length?s.symptoms.join('; '):(s.screenNegative?'Completed — negative':'Not completed')],['Risk modifiers',s.risks.length?s.risks.join('; '):'None selected'],['β-hydroxybutyrate',s.bhb===null?'Not entered':s.bhb+' mmol/L'],['Anion gap',s.gap===null?'Not entered':s.gap+' mEq/L'],['pH',s.ph===null?'Not entered':String(s.ph)],['Bicarbonate',s.bicarb===null?'Not entered':s.bicarb+' mmol/L'],['Testing access',selectedLabel('sgltLocation')],['Current branch',r.branch],['Postoperative checklist',s.post.length?s.post.join('; '):'None checked']];
+    $('sgltTrace').innerHTML=lines.map(([key,val])=>`<div><strong>${sanitize(key)}</strong><span>${sanitize(val)}</span></div>`).join('');
+    const active=s.drug!=='none'||selected().includes('sglt')||s.symptoms.length>0;
+    $('sgltSummaryBlock').style.display=active?'block':'none';
+    $('sgltSummaryDetail').innerHTML=active?recHTML(out(r.tone==='red'?'urgent':r.tone==='green'?'general':'review',r.title,r.body,'Uploaded SGLT2 presentation, slides 6, 9–13; clinician validation required'))+'<div class="rec info"><div class="rec-title">SGLT2 pathway inputs &amp; next steps</div><p>'+lines.map(([key,val])=>sanitize(key)+': '+sanitize(val)).join(' · ')+'</p><p>'+r.actions.map(a=>sanitize(a)).join(' | ')+'</p></div>':'';
+  }
+
+  function build() {
+    const res=[];const med=selected();const urgency=get('urgency'), diabetes=get('diabetesType');
+    const glucose=numeric('glucose'), a1c=numeric('a1c');
+    res.push(out('general','Core perioperative glucose plan','2026 ADA reference target: 100–180 mg/dL before, during, and after surgery. Confirm monitoring frequency, hypoglycemia rescue and insulin orders under the local policy.',ref.ada));
+    if(diabetes==='type1') res.push(out('urgent','Type 1 diabetes — maintain basal insulin','Basal insulin must not be inadvertently withheld while fasting. Establish an individualized basal/infusion or pump-backup plan and monitor glucose/ketosis as clinically indicated.',ref.ada));
+    if(diabetes==='unknown') res.push(out('review','Diabetes type not established','Confirm diabetes type and medication indications. Type 1 diabetes and insulin-dependent patients require specific basal insulin safeguards.',ref.local));
+    if(glucose!==null){
+      if(glucose<70) res.push(out('urgent','Hypoglycemia value entered',`Glucose ${glucose} mg/dL is below 70. Treat and reassess promptly per approved hypoglycemia protocol before any further perioperative decisions.`,ref.ada));
+      else if(glucose>180) res.push(out('review','Glucose above perioperative target',`Glucose ${glucose} mg/dL is above the ADA 100–180 mg/dL reference target. Review repeat testing, treatment plan, and possible ketosis when indicated; this number is not an automatic cancellation rule.`,ref.ada));
+      else if(glucose<100) res.push(out('info','Glucose near low end of perioperative target',`Glucose ${glucose} mg/dL: assess trend, insulin exposure and fasting to prevent hypoglycemia.`,ref.ada));
+    }
+    if(a1c!==null && a1c>=8) res.push(out('review','HbA1c and elective optimization',`HbA1c ${a1c}% is above the ADA suggested preoperative elective target (<8%). Consider optimization in planning; do not automatically cancel or delay based on HbA1c alone.`,ref.ada));
+    if(get('nutrition')==='poor')res.push(out('review','Poor intake / prolonged fasting','Coordinate glucose monitoring, basal insulin safety, hydration and medication review. Prolonged fasting may also raise SGLT2-associated ketosis risk.',ref.ada));
+    if(med.includes('basal'))res.push(out('review','Long-acting basal insulin','A reduced perioperative basal dose may be appropriate, but exact dosing depends on diabetes type, insulin regimen, hypoglycemia risk, glucose data and local orders. Avoid inadvertent omission in type 1 diabetes.',ref.ada));
+    if(med.includes('nph'))res.push(out('review','NPH insulin','ADA 2026 describes perioperative reduction strategies for NPH; verify timing and dose with an institution-approved order set rather than applying a percentage automatically.',ref.ada));
+    if(med.includes('mealtime'))res.push(out('review','Prandial / correction insulin','Coordinate prandial insulin with NPO status and meal intake. A correction approach and glucose testing are still needed when clinically indicated; do not use standing mealtime doses without reviewing intake.',ref.ada));
+    if(med.includes('pump'))res.push(out('urgent','Insulin pump or automated system — explicit perioperative plan','Confirm device compatibility, patient ability to manage, staff experience, infusion site/CGM considerations, glucose checks and an alternative basal or IV insulin pathway if the pump is interrupted.',ref.ada));
+    if(med.includes('metformin'))res.push(out('review','Metformin — differing professional recommendations','ADA 2026 recommends withholding on the day of surgery; the 2026 AHA/ACC perioperative guideline considers continuation reasonable in appropriate patients. Your hospital must adopt a consistent policy considering renal function and contrast/clinical context.',ref.ada+'; '+ref.aha));
+    if(med.includes('sulfonylurea'))res.push(out('review','Sulfonylurea — fasting hypoglycemia risk','ADA 2026 recommends holding oral glucose-lowering medications on the day of surgery. Confirm glucose monitoring and reintroduction when intake is reliable.',ref.ada));
+    if(med.includes('dpp4'))res.push(out('review','DPP-4 inhibitor','ADA 2026 generally recommends holding oral glucose-lowering medications on the day of surgery; individual protocols may differ. Verify the local plan.',ref.ada));
+    if(med.includes('tzd'))res.push(out('review','Thiazolidinedione','Confirm the day-of-surgery withholding plan according to the institution’s oral diabetes medication protocol; consider comorbid fluid retention or heart failure.',ref.ada));
+    const gp=get('glpDrug'), glpActive=gp!=='none'||med.includes('glp');
+    if(glpActive){
+      if(gp==='none')res.push(out('review','GLP-1 class selected without a specific drug','Record agent, formulation, indication, dose and last administration. Both daily and weekly products require GI symptom and gastric emptying risk review.',ref.multi));
+      else res.push(out('info','GLP-1 / dual agonist on medication list',`${selectedLabel('glpDrug')}. The 2024 multisociety and 2025 SPAQI approaches generally favor individualized continuation rather than routine universal withholding; confirm the local approach.`,ref.multi+'; '+ref.spaqi));
+      const sym=get('glpSymptoms'),phase=get('glpPhase'), other=get('glpOther');
+      if(sym==='severe')res.push(out('urgent','Significant GI symptoms — anesthesia evaluation before elective procedure','Persistent vomiting, severe nausea, or inability to tolerate oral intake raise concerns for delayed gastric emptying, aspiration and dehydration. For an elective case, evaluate postponement and medication/diet adjustment with anesthesia and the prescribing team.',ref.multi+'; '+ref.spaqi));
+      else if(sym==='unknown')res.push(out('review','GI symptom assessment missing','Ask specifically about nausea, vomiting, abdominal pain, fullness/early satiety, constipation and ability to tolerate oral intake before determining the aspiration-risk plan.',ref.multi));
+      if(phase==='escalating'||phase==='high')res.push(out('review','Recent start, dose escalation or higher dose','GLP-1 titration and higher doses are associated with GI effects and possible delayed emptying. Consider diet modification, anesthesia planning and shared decision-making.',ref.multi));
+      if(phase==='unknown')res.push(out('review','GLP-1 dose phase unknown','Document stable maintenance versus new start or dose escalation; this affects the clinical aspiration-risk assessment.',ref.multi));
+      if(other==='yes'||$('otherAsp').checked)res.push(out('review','Additional gastric emptying / aspiration concern','Coexisting gastroparesis, dysmotility or other aspiration factors warrant individualized anesthesia review beyond GLP-1 medication timing.',ref.multi+'; '+ref.spaqi));
+      else if(other==='unknown')res.push(out('review','Other gastric motility conditions not assessed','Ask about gastroparesis and conditions or drugs that can delay gastric emptying.',ref.multi));
+      if(get('liquid24')==='no')res.push(out('review','24-hour dietary plan not completed','The 2024 multisociety guidance suggests liquid-only dietary modification when risk is elevated; SPAQI 2025 suggests a 24-hour clear-liquid diet for GLP-1 users. Review local policy, clinical risk, and procedure urgency; do not auto-cancel.',ref.multi+'; '+ref.spaqi));
+      if(get('liquid24')==='unknown')res.push(out('review','GLP-1 fasting policy not established','Determine which approved institutional GLP-1 preparation and fasting approach applies. The major guidance documents differ about which patients require a 24-hour liquid/clear-liquid diet.',ref.multi+'; '+ref.spaqi));
+      if(get('glpFasting')!=='met')res.push(out('review','Standard fasting verification needed','Confirm the institution’s standard procedure-specific fasting rules. A GLP-1 medication hold does not guarantee normal gastric emptying.',ref.multi));
+      if(urgency==='urgent'||urgency==='emergency')res.push(out('review','Urgent GLP-1 case — individualized aspiration plan','Do not treat GLP-1 use alone as an automatic reason to delay necessary surgery. Assess symptoms and fasting; consider gastric ultrasound if available and airway strategies appropriate to aspiration risk.',ref.multi));
+      else if(sym==='none'&&phase==='stable'&&other==='no'&&get('liquid24')!=='no'&&get('glpFasting')==='met')res.push(out('general','Lower-risk GLP-1 profile documented','No concerning GI symptoms, a stable regimen, and no identified motility comorbidity. Continuation may be reasonable under multisociety guidance, subject to institutional fasting policy and clinical review. Not a clearance decision.',ref.multi));
+    }
+    const sgltInput=sgltData(), sgltActive=sgltInput.drug!=='none'||med.includes('sglt')||sgltInput.symptoms.length>0;
+    if(sgltActive){
+      const r=sgltEvaluate(sgltInput);
+      res.push(out(r.tone==='red'?'urgent':r.tone==='green'?'general':'review','SGLT2 detailed pathway: '+r.title,r.body+' '+r.actions.join(' '),'Uploaded SGLT2 presentation, slides 6, 9–13; '+ref.ada));
+      if(sgltInput.post.length)res.push(out('info','SGLT2 postoperative checklist documented',sgltInput.post.join('; '), 'Uploaded SGLT2 presentation, slides 11–12'));
+    }
+    if(med.includes('glp')&&!glpActive)res.push(out('review','Complete detailed drug pathway','Select the specific drug and review the matching detailed module.',ref.local));
+    if(urgency==='unknown')res.push(out('review','Surgical urgency not recorded','Select elective, urgent or emergency status; medication interruption and aspiration decisions depend on urgency.',ref.local));
+    if(get('anesthesiaType')==='unknown')res.push(out('review','Planned anesthesia not recorded','Document whether general anesthesia, sedation or regional/local technique is planned. Aspiration planning varies with technique and possibility of conversion.',ref.local));
+    return res;
+  }
+  function recHTML(rec){return `<article class="rec ${rec.level}"><div class="rec-top"><div class="rec-title">${sanitize(rec.title)}</div><span class="rec-level">${rec.level==='urgent'?'Escalation':rec.level==='review'?'Review required':'Reference'}</span></div><p>${sanitize(rec.message)}</p><div class="source">${sanitize(rec.source)}</div></article>`}
+  let current=[];
+  function update(){
+    current=build();const pri={'urgent':0,'review':1,'info':2,'general':3};current.sort((a,b)=>pri[a.level]-pri[b.level]);
+    $('fullRecs').innerHTML=current.map(recHTML).join('');
+    $('quickRecs').innerHTML=current.slice(0,5).map(recHTML).join('')+(current.length>5?`<p class="quiet">+ ${current.length-5} more items in full review</p>`:'');
+    const counts={urgent:current.filter(x=>x.level==='urgent').length,review:current.filter(x=>x.level==='review').length};
+    $('summaryFacts').innerHTML=`<div class="stat"><b>${counts.urgent}</b><span>Escalation items</span></div><div class="stat"><b>${counts.review}</b><span>Review items</span></div><div class="stat"><b>${selected().length}</b><span>Medication groups selected</span></div>`;
+    document.querySelectorAll('.module-link').forEach(e=>e.setAttribute('aria-label',e.textContent.trim()));
+    renderSglt();
+  }
+  function show(view){document.querySelectorAll('.view').forEach(e=>e.classList.toggle('active',e.id===view));document.querySelectorAll('.nav-btn').forEach(e=>{const on=e.dataset.view===view;e.classList.toggle('active',on);e.setAttribute('aria-current',on?'step':'false')});window.scrollTo({top:0,behavior:'instant'});update()}
+  document.querySelectorAll('[data-view],[data-jump]').forEach(btn=>btn.addEventListener('click',()=>show(btn.dataset.view||btn.dataset.jump)));
+  document.querySelectorAll('input,select').forEach(i=>{if(i.id==='sgltUrgencyEditor')return;i.addEventListener('input',update);i.addEventListener('change',update)});
+  $('sgltUrgencyEditor').addEventListener('change',e=>{ $('urgency').value=e.target.value;update(); });
+  $('sgltNoSymptoms').addEventListener('change',e=>{if(e.target.checked)document.querySelectorAll('#sgltSymptomChecks input').forEach(x=>x.checked=false);update();});
+  document.querySelectorAll('#sgltSymptomChecks input').forEach(e=>e.addEventListener('change',()=>{if(selectedChecks('sgltSymptomChecks').length)$('sgltNoSymptoms').checked=false;update();}));
+  $('resetAll').addEventListener('click',()=>{document.querySelectorAll('input[type=checkbox]').forEach(i=>i.checked=false);document.querySelectorAll('input[type=number]').forEach(i=>i.value='');document.querySelectorAll('select').forEach(i=>i.selectedIndex=0);$('copyStatus').textContent='';show('overview')});
+  $('printBtn').addEventListener('click',()=>{show('summary');window.print()});
+  $('copyBtn').addEventListener('click',async()=>{const text=['Perioperative Diabetes & GLP-1 Guide — UNVALIDATED DEMO','Profile: '+selectedLabel('diabetesType')+'; '+selectedLabel('urgency')+'; '+selectedLabel('anesthesiaType'),'Medications selected: '+(selected().join(', ')||'none'),...current.map(r=>`[${r.level.toUpperCase()}] ${r.title}: ${r.message} (${r.source})`),'SGLT2 detailed branch: '+sgltCurrent.branch,'SGLT2 review: '+sgltCurrent.title,'SGLT2 next steps: '+sgltCurrent.actions.join(' | '),'No surgical clearance or medication orders generated.'];try{await navigator.clipboard.writeText(text.join('\n\n'));$('copyStatus').textContent='Summary copied.'}catch(e){$('copyStatus').textContent='Copy unavailable in this browser. Use Print instead.'}});
+  update();
+  // Test-only read-only accessor; no patient data persists outside this tab.
+  window.__demoStatus=()=>({items:current.map(x=>({title:x.title,level:x.level})),active:document.querySelector('.view.active')?.id});
+})();
+</script>
+</body></html>

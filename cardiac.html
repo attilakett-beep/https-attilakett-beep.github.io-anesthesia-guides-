@@ -1,0 +1,347 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+  <meta name="color-scheme" content="light">
+  <title>Perioperative Cardiovascular Evaluation | Interactive Prototype</title>
+  <style>
+    :root { --navy:#172b43; --navy2:#24415d; --teal:#157a78; --mint:#e7f5f1; --ink:#1c3046; --muted:#607186; --line:#dce5ee; --bg:#f4f7fa; --white:#fff; --warn:#fff6e6; --warn-border:#eac582; --red:#8d413e; --redbg:#fff0ee; --shadow:0 10px 34px rgba(23,43,67,.07); }
+    * { box-sizing:border-box; }
+    html { scroll-behavior:smooth; }
+    body { margin:0; background:var(--bg); color:var(--ink); font-family:system-ui,-apple-system,BlinkMacSystemFont,"Segoe UI",sans-serif; line-height:1.55; }
+    button,input { font:inherit; }
+    button { cursor:pointer; }
+    button:focus-visible, a:focus-visible, input:focus-visible { outline:3px solid #2a9f9a; outline-offset:3px; }
+    a { color:#126d75; }
+    .topbar { background:var(--navy); color:#fff; padding:18px max(22px,calc((100% - 1170px)/2)); display:flex; justify-content:space-between; align-items:center; gap:16px; }
+    .identity { display:flex; align-items:center; gap:12px; }
+    .logo { width:42px; height:42px; display:grid; place-items:center; border:1px solid #7ba4b2; border-radius:12px; color:#b6e5df; font-size:24px; }
+    .brand-title { font-size:17px; letter-spacing:-.02em; font-weight:750; line-height:1.3; }
+    .brand-sub { font-size:12px; color:#b9c9d9; margin-top:2px; }
+    .badge { background:#344d63; border:1px solid #59718a; color:#e3f0f6; border-radius:999px; padding:6px 10px; font-size:11px; font-weight:750; white-space:nowrap; }
+    .page { max-width:1170px; margin:0 auto; padding:22px 22px 54px; }
+    .warning { display:flex; gap:13px; padding:14px 16px; border:1px solid var(--warn-border); border-radius:12px; background:var(--warn); color:#6a4c21; margin-bottom:22px; font-size:13px; }
+    .warning strong { display:block; font-size:13px; margin-bottom:2px; }
+    .layout { display:grid; grid-template-columns: minmax(0, 1fr) 290px; align-items:start; gap:22px; }
+    .panel,.side { background:#fff; border:1px solid var(--line); border-radius:17px; box-shadow:var(--shadow); }
+    .panel { min-height:520px; overflow:hidden; }
+    .stephead { padding:27px 30px 19px; border-bottom:1px solid var(--line); background:linear-gradient(140deg,#fff 60%,#f2faf8); }
+    .eyebrow { color:#167775; text-transform:uppercase; font-size:11px; font-weight:800; letter-spacing:.085em; }
+    h1 { font-size:clamp(23px,3vw,32px); line-height:1.24; letter-spacing:-.035em; margin:8px 0 7px; }
+    .lead { color:var(--muted); font-size:14px; max-width:690px; margin:0; }
+    .progresswrap { display:flex; justify-content:space-between; gap:10px; align-items:center; padding:0 30px; margin-top:18px; }
+    .progresslabel { font-size:12px; color:var(--muted); font-weight:700; }
+    .progress { background:#e7edf2; height:7px; border-radius:99px; flex:1; overflow:hidden; }
+    .progress > div { height:100%; background:var(--teal); border-radius:99px; transition:width .24s ease; }
+    .body { padding:27px 30px 30px; }
+    .question { font-size:18px; font-weight:750; margin:0 0 16px; line-height:1.4; }
+    .field-help { margin:-8px 0 16px; color:var(--muted); font-size:13px; }
+    .choices { display:grid; grid-template-columns:1fr 1fr; gap:12px; }
+    .choices.one { grid-template-columns:1fr; }
+    .choice { text-align:left; display:flex; align-items:flex-start; gap:12px; width:100%; min-height:82px; padding:15px; border-radius:13px; border:1px solid var(--line); background:#fff; color:var(--ink); transition:border-color .15s,background .15s; }
+    .choice:hover { border-color:#8dc7c0; background:#f6fbfa; }
+    .choice.selected { border:2px solid #2a948e; background:#eef9f7; padding:14px; }
+    .choice .circle { width:21px; height:21px; border:2px solid #b0c2cd; border-radius:50%; flex:none; margin-top:2px; display:grid; place-items:center; font-size:12px; color:#fff; }
+    .choice.selected .circle { border-color:var(--teal); background:var(--teal); }
+    .choice b { display:block; font-size:14px; line-height:1.35; }
+    .choice small { display:block; font-size:12px; color:var(--muted); line-height:1.45; margin-top:5px; }
+    .detail { background:#f2f7fa; border-left:3px solid #2c8692; border-radius:5px 10px 10px 5px; color:#425971; padding:13px 15px; margin-top:22px; font-size:13px; }
+    .detail strong { display:block; color:#254b60; margin-bottom:3px; }
+    .nav { border-top:1px solid var(--line); display:flex; justify-content:space-between; align-items:center; gap:10px; padding:18px 30px; background:#fcfdff; }
+    .btn { display:inline-flex; justify-content:center; align-items:center; gap:8px; border-radius:10px; border:1px solid var(--line); background:#fff; padding:10px 16px; font-size:13px; font-weight:750; min-height:42px; color:var(--ink); }
+    .btn:hover { background:#f0f6f7; }
+    .btn.primary { background:var(--teal); border-color:var(--teal); color:#fff; }
+    .btn.primary:hover { background:#106a68; }
+    .btn:disabled { cursor:not-allowed; opacity:.42; }
+    .side { padding:21px; position:sticky; top:20px; }
+    .sidehead { display:flex; justify-content:space-between; align-items:center; gap:8px; margin-bottom:8px; }
+    .side h2 { font-size:15px; margin:0; }
+    .side .caption { font-size:12px; color:var(--muted); margin:0 0 14px; }
+    .timeline { list-style:none; padding:0; margin:0; }
+    .timeline li { display:flex; gap:10px; position:relative; padding:0 0 18px; }
+    .timeline li:last-child { padding-bottom:0; }
+    .timeline li:not(:last-child)::before { content:""; position:absolute; width:2px; background:#e4edef; left:12px; top:24px; bottom:2px; }
+    .timeline-dot { height:26px; width:26px; border-radius:50%; background:#e8f0f3; color:#627487; display:grid; place-items:center; flex:none; font-weight:750; font-size:11px; }
+    .timeline li.current .timeline-dot { background:var(--teal); color:#fff; }
+    .timeline li.done .timeline-dot { background:#dff4ef; color:var(--teal); }
+    .timeline-content { flex:1; min-width:0; padding-top:2px; }
+    .timeline-content button { display:block; text-align:left; border:0; background:transparent; padding:0; color:inherit; font-size:12px; font-weight:700; line-height:1.45; }
+    .timeline-content button:hover { text-decoration:underline; }
+    .timeline-content p { font-size:11px; color:var(--muted); margin:3px 0 0; overflow-wrap:anywhere; }
+    .sidelink { margin-top:18px; padding-top:16px; border-top:1px solid var(--line); }
+    .sidelink button { border:0; background:transparent; font-size:12px; font-weight:700; padding:3px 0; color:#286d75; }
+    .toolrow { display:flex; flex-wrap:wrap; gap:8px; margin-top:17px; }
+    .toolrow button { background:#f1f7f7; border:1px solid #d2e8e5; border-radius:8px; font-size:12px; font-weight:750; padding:9px 12px; color:#1f6972; }
+    .toolrow button:hover { background:#e3f3ef; }
+    .checkrow { display:flex; align-items:flex-start; gap:12px; padding:13px 14px; border:1px solid var(--line); border-radius:10px; margin-bottom:9px; cursor:pointer; }
+    .checkrow.checked { background:#eff9f6; border-color:#79bdb5; }
+    .checkrow input { margin-top:4px; accent-color:var(--teal); height:17px; width:17px; flex:none; }
+    .checkrow strong { display:block; font-size:13px; }
+    .checkrow small { font-size:12px; color:var(--muted); }
+    .outcome { background:#eff7f7; border:1px solid #b4ded7; border-radius:13px; padding:18px 20px; margin-bottom:19px; }
+    .outcome.alert { background:#fff1ef; border-color:#e8bab5; }
+    .outcome.review { background:#fff8ea; border-color:#ead29f; }
+    .outcome h2 { font-size:20px; letter-spacing:-.02em; margin:4px 0 7px; }
+    .outcome p { margin:0; font-size:13px; color:#40576b; }
+    .sectiontitle { margin:20px 0 8px; font-weight:800; font-size:14px; color:#274960; }
+    .factlist { display:grid; grid-template-columns:repeat(2,minmax(0,1fr)); gap:10px; }
+    .fact { background:#f5f8fb; border:1px solid #e4ebf1; padding:11px 13px; border-radius:9px; }
+    .fact b { font-size:11px; color:#5b7083; display:block; }
+    .fact span { font-size:13px; font-weight:650; }
+    .guidance { margin:0 0 20px; padding-left:22px; font-size:13px; }
+    .guidance li { padding:4px 0; }
+    .sources { margin-top:28px; border-top:1px solid var(--line); padding-top:15px; color:var(--muted); font-size:11px; }
+    .sources a { overflow-wrap:anywhere; }
+    .actionrow { display:flex; gap:9px; flex-wrap:wrap; margin-top:20px; }
+    .overlay { position:fixed; inset:0; padding:18px; background:rgba(13,31,46,.65); display:grid; place-items:center; z-index:1000; }
+    .modal { width:min(100%,660px); max-height:min(90vh,840px); overflow:auto; background:#fff; border-radius:16px; padding:27px; box-shadow:0 22px 80px rgba(0,0,0,.25); }
+    .modal h2 { margin:0 0 10px; letter-spacing:-.025em; }
+    .modal p { color:#52687b; font-size:13px; }
+    .modal .disclaimer { padding:13px 16px; background:#fff5e5; border:1px solid #e6c68b; color:#694c27; border-radius:10px; font-size:13px; }
+    .modal .actions { margin-top:20px; display:flex; justify-content:flex-end; gap:10px; }
+    .calc-row { display:flex; align-items:flex-start; gap:11px; padding:10px 0; border-bottom:1px solid #edf1f5; font-size:13px; }
+    .calc-row input { margin:5px 0 0; width:17px; height:17px; accent-color:var(--teal); }
+    .calc-row .weight { margin-left:auto; flex:none; color:var(--muted); font-size:12px; }
+    .calc-result { background:#eaf6f4; border-radius:10px; padding:13px 15px; margin-top:16px; }
+    .calc-result b { font-size:23px; color:#146b68; }
+    .muted { color:var(--muted); }
+    .error { color:#953d33; font-size:12px; margin-top:10px; }
+    .footer { max-width:1170px; margin:0 auto; padding:0 22px 24px; font-size:11px; color:var(--muted); }
+    .sr-only { position:absolute; height:1px; width:1px; overflow:hidden; clip:rect(0 0 0 0); }
+    @media (max-width:820px) { .layout { grid-template-columns:1fr; } .side { position:static; order:2; } .topbar { padding:15px 18px; } .page { padding:18px 14px 32px; } .warning { font-size:12px; } .panel { min-height:0; } }
+    @media (max-width:520px) { .choices,.factlist { grid-template-columns:1fr; } .stephead,.body { padding:21px 19px; } .nav { padding:16px 19px; } .progresswrap { padding:0 19px; } .brand-title { font-size:14px; } .brand-sub { font-size:11px; } .badge { font-size:10px; padding:5px 7px; } .modal { padding:22px 17px; } }
+    @media print { body { background:#fff; } .topbar,.warning,.side,.nav,.actionrow,.toolrow,.footer,.overlay,.progresswrap { display:none !important; } .page { padding:0; } .layout { display:block; } .panel { box-shadow:none; border:0; } .stephead { padding:0 0 15px; } .body { padding:10px 0; } .sources { page-break-before:avoid; } }
+  </style>
+</head>
+<body>
+  <header class="topbar">
+    <div class="identity"><div class="logo" aria-hidden="true">♡</div><div><div class="brand-title">Perioperative Cardiovascular Evaluation</div><div class="brand-sub">Interactive decision-support prototype · Noncardiac surgery</div></div></div>
+    <span class="badge">DEMONSTRATION ONLY</span>
+  </header>
+  <main class="page">
+    <div class="warning" role="note"><div aria-hidden="true">⚠</div><div><strong>Not validated or approved for patient care.</strong> This educational prototype illustrates a clinical decision pathway. It does not confer clearance, replace clinical assessment, generate orders, or provide patient-specific medical advice. Do not enter patient identifiers.</div></div>
+    <div class="layout">
+      <section class="panel" aria-label="Decision pathway">
+        <div class="stephead"><div class="eyebrow" id="eyebrow">Interactive pathway</div><h1 id="stepTitle">Loading…</h1><p class="lead" id="stepDesc"></p></div>
+        <div class="progresswrap"><span class="progresslabel" id="stepCount"></span><div class="progress" role="progressbar" aria-label="Pathway progress" aria-valuemin="0" aria-valuemax="100" aria-valuenow="0" id="progress"><div id="bar"></div></div></div>
+        <div class="body" id="body" aria-live="polite"></div>
+        <div class="nav" id="nav"><button class="btn" type="button" id="back">← Back</button><button class="btn primary" type="button" id="next">Continue →</button></div>
+      </section>
+      <aside class="side" aria-label="Decision history"><div class="sidehead"><h2>Decision path</h2><span aria-hidden="true">↗</span></div><p class="caption">Your selections appear here. Revisit a completed step to change it.</p><ol class="timeline" id="timeline"></ol><div class="sidelink"><button id="restart" type="button">↺ Start a new assessment</button></div></aside>
+    </div>
+  </main>
+  <footer class="footer">Standalone demonstration. All inputs stay in browser memory; no account, tracking, external scripts, or backend. Source: AHA/ACC multisociety perioperative cardiovascular guideline, 2026 reaffirmation of 2024 content. Version: 0.1 (Nov 2026).</footer>
+  <div class="overlay" id="intro" role="dialog" aria-modal="true" aria-labelledby="introTitle">
+    <div class="modal"><div class="eyebrow">Before you begin</div><h2 id="introTitle">Educational prototype — not clinical software</h2><p>This is an independently written demonstration of the layout and broad sequence of the preoperative cardiovascular evaluation workflow. It is <strong>not a validated implementation</strong> of the full guideline, and it does not reproduce all recommendations, indications, or exceptions.</p><div class="disclaimer">Do not use to decide whether to proceed with surgery, delay surgery, order tests, or treat a patient. A licensed clinician must apply the full current guideline and institution-specific policies.</div><p>Do not enter names, MRNs, dates of birth, or other identifying information. Choices remain in memory and are discarded on page reload. The app works offline; guideline links require internet if opened.</p><div class="actions"><button class="btn primary" id="accept" type="button">I understand · Explore demo →</button></div></div>
+  </div>
+  <div class="overlay" id="calculator" style="display:none" role="dialog" aria-modal="true" aria-labelledby="calcTitle"><div class="modal"><div class="eyebrow">Reference calculator</div><h2 id="calcTitle"></h2><div id="calcBody"></div><div class="actions"><button class="btn" id="closeCalc" type="button">Close</button></div></div></div>
+  <script>
+  (()=>{
+    "use strict";
+    const BASE = 'https://professional.heart.org/en/science-news/2026-guideline-for-perioperative-cardiovascular-management-for-noncardiac-surgery';
+    const state = {urgency:null, cv:null, acute:null, risk:null, modifiers:[], capacity:null, testingChange:null, focus:[], biomarkers:null, team:null, findings:null, rcri:[], dasi:[], cfs:null};
+    const master = ['urgency','cv','acute','risk','modifiers','capacity','testingChange','focus','biomarkers','team','findings','review'];
+    const prompts = {
+      urgency: {title:'Timing of noncardiac surgery',desc:'Determine how urgently surgery must occur. Clinical instability and time constraints should be assessed together.',question:'How time-sensitive is the planned procedure?',options:[['emergency','Emergency','Immediate threat to life or limb; a conventional workup may not be feasible.'],['urgent','Urgent','A threat to life or limb requiring prompt surgery.'],['time-sensitive','Time-sensitive','Delay for evaluation may adversely affect the patient.'],['elective','Elective','Surgery may be scheduled to allow standard assessment.']]},
+      cv: {title:'Cardiovascular screening',desc:'Identify known cardiovascular disease, symptoms, or risk factors before proceeding through the pathway.',question:'Are cardiovascular conditions, symptoms, or risk factors known?',options:[['yes','Yes','At least one relevant condition, symptom, or risk factor is present.'],['no','No identified concerns','No known cardiovascular concerns based on available information.'],['unsure','Unknown / not assessed','Further assessment is needed before interpreting risk.']]},
+      acute: {title:'Screen for acute cardiac conditions',desc:'A potentially active or unstable cardiac condition changes the evaluation plan. Emergency surgery requires a distinct time-sensitive approach.',question:'Is there a suspected acute or unstable cardiac condition?',options:[['yes','Yes / suspected','For example, acute coronary syndrome, decompensated heart failure, or unstable arrhythmia.'],['no','No apparent acute condition','No suspected acute or unstable condition on current assessment.'],['unsure','Cannot determine','Important symptoms, examination findings, or history remain unresolved.']]},
+      risk: {title:'Estimate perioperative cardiac risk',desc:'Use an appropriate validated risk tool with procedure-specific information. This demo does not calculate the overall MACE probability.',question:'What is the estimated risk of major adverse cardiac events (MACE)?',options:[['low','Low risk: <1%','Risk estimate from an appropriate validated method.'],['elevated','Elevated risk: ≥1%','Risk estimate from an appropriate validated method.'],['unknown','Not yet established','Obtain further information or use a validated risk calculator.']]},
+      modifiers: {title:'Review clinical risk modifiers',desc:'Modifiers are clinically relevant but do not independently supply a calibrated MACE percentage.',question:'Which additional factors warrant focused review?',multiple:true,options:[['severe-valve','Known or suspected significant valvular heart disease'],['pulm-htn','Pulmonary hypertension'],['congenital','Adult congenital heart disease'],['pci','Recent PCI / coronary revascularization'],['device','Pacemaker or implantable defibrillator'],['stroke','History of stroke'],['frailty','Frailty or significant vulnerability'],['other','Other significant cardiovascular concern']]},
+      capacity: {title:'Assess functional capacity',desc:'Functional status helps decide whether further evaluation may add value in patients with elevated risk. An optional DASI scoring aid is available.',question:'What is the documented functional capacity?',options:[['good','Adequate capacity','Good functional capacity by clinical assessment or a validated measure.'],['poor','Poor capacity','Reduced or limited functional capacity.'],['unknown','Unknown / unreliable','Insufficient information or unreliable estimate.']]},
+      testingChange: {title:'Will additional testing change management?',desc:'Selective testing is most useful when results could affect treatment, surgery timing, or a shared management decision.',question:'Would further cardiovascular testing plausibly change management?',options:[['yes','Yes','A specific clinical question or actionable decision has been identified.'],['no','No','Additional information is unlikely to change the plan.'],['unsure','Uncertain','Discuss with the clinical team before ordering tests.']]},
+      focus: {title:'Targeted testing considerations',desc:'These are discussion prompts, not automatic orders or a complete list of indications.',question:'Which issues require consideration by the clinical team?',multiple:true,options:[['biomarkers','Perioperative biomarkers in a guideline-eligible higher-risk patient'],['echo','New/worsening dyspnea, heart failure findings, or suspected significant valve disease'],['stress','Selective ischemia testing only if the result could change management'],['mdt','Cardiology, anesthesia, and surgical team discussion']]},
+      biomarkers: {title:'Biomarker findings or status',desc:'In selected higher-risk patients, guideline-directed biomarker assessment may help inform an individualized plan. This screen does not recommend ordering a test.',question:'If relevant biomarkers have been assessed, what was the clinician-interpreted result?',options:[['normal','Within the applicable reference range','A clinician has interpreted relevant results against the lab and clinical context.'],['abnormal','Abnormal / elevated','At least one relevant result warrants interpretation in clinical context.'],['none','Not performed / not indicated','No applicable biomarker result is available or testing was not selected.'],['unknown','Uncertain / pending','Results, applicability, or interpretation are not established.']]},
+      team: {title:'Multidisciplinary review',desc:'When risk or test interpretation is unresolved, a clinician-led discussion may address further evaluation and surgical alternatives.',question:'What was the outcome of the clinical team discussion?',options:[['evaluate','Additional evaluation selected','The team has identified a specific clinical question and further evaluation.'],['no-eval','No additional evaluation selected','The team has a documented plan without additional cardiac investigation.'],['pending','Discussion pending / undecided','No disposition has been agreed upon.']]},
+      findings: {title:'Additional cardiovascular evaluation',desc:'Use this stage only to record the team’s interpretation of any indicated workup; it is not a reading of ECG, echo, stress tests, or CCTA.',question:'What is the clinician-interpreted status of the additional evaluation?',options:[['reassuring','No new high-concern findings identified','Any testing performed was assessed by the responsible clinician.'],['concerning','Potentially important abnormalities identified','Findings require specialist interpretation and an individualized management plan.'],['pending','Pending / indeterminate','Assessment has not yielded a clinically interpretable result.']]}
+    };
+    const label = {urgency:'Surgical timing',cv:'Cardiovascular screen',acute:'Acute cardiac condition',risk:'Estimated MACE risk',modifiers:'Risk modifiers',capacity:'Functional capacity',testingChange:'Testing utility',focus:'Testing indications',biomarkers:'Biomarker status',team:'Team discussion',findings:'Evaluation findings',review:'Review & export'};
+    const longlabel = {
+      urgency:{emergency:'Emergency',urgent:'Urgent', 'time-sensitive':'Time-sensitive',elective:'Elective'},
+      cv:{yes:'Concerns identified',no:'None identified',unsure:'Unknown'},
+      acute:{yes:'Present or suspected',no:'Not apparent',unsure:'Uncertain'},
+      risk:{low:'Low (<1%)',elevated:'Elevated (≥1%)',unknown:'Undetermined'},
+      capacity:{good:'Adequate',poor:'Poor',unknown:'Unknown'},
+      testingChange:{yes:'Could change management',no:'Unlikely to change management',unsure:'Uncertain'},
+      biomarkers:{normal:'Clinician-interpreted normal',abnormal:'Elevated / abnormal',none:'Not performed',unknown:'Uncertain / pending'},
+      team:{evaluate:'Further evaluation selected','no-eval':'No additional evaluation selected',pending:'Discussion pending'},
+      findings:{reassuring:'No new high-concern findings',concerning:'Potentially important abnormal findings',pending:'Pending / indeterminate'}
+    };
+    let current='urgency';
+    const el=(id)=>document.getElementById(id);
+    const esc=(s)=>String(s).replace(/[&<>"']/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));
+    function pathway(){
+      const order=['urgency','cv','acute'];
+      if(!state.urgency || !state.cv || !state.acute) return order;
+      if(state.urgency==='emergency' || state.acute!=='no') return [...order,'review'];
+      order.push('risk');
+      if(!state.risk) return order;
+      if(state.risk==='low' || state.risk==='unknown') return [...order,'review'];
+      order.push('modifiers','capacity');
+      if(!state.capacity) return order;
+      if(state.capacity==='good') return [...order,'review'];
+      order.push('testingChange');
+      if(!state.testingChange) return order;
+      if(state.testingChange==='no') return [...order,'review'];
+      if(state.testingChange==='yes') {
+        order.push('focus','biomarkers');
+        if(!state.biomarkers) return order;
+        if(state.biomarkers==='normal') return [...order,'review'];
+      }
+      order.push('team');
+      if(!state.team) return order;
+      if(state.team==='evaluate') {
+        order.push('findings');
+        if(!state.findings) return order;
+      }
+      order.push('review');
+      return order;
+    }
+    function responseSummary(k){
+      if(k==='review') return 'Summary and next steps';
+      if(k==='modifiers' || k==='focus') return (state[k]||[]).length?state[k].length+' selected':'None selected';
+      return state[k]? (longlabel[k]?.[state[k]]||state[k]) : 'Not answered';
+    }
+    function hasAnswer(k){return k==='modifiers'||k==='focus'||k==='review'||Boolean(state[k]);}
+    function modify(k,v){
+      // A changed earlier answer invalidates every later branch and calculation input.
+      let differs = Array.isArray(state[k]) ? !state[k].includes(v) : state[k]!==v;
+      if(differs) { let idx=master.indexOf(k); master.slice(idx+1).forEach(x=> {if(x==='review')return;state[x]=Array.isArray(state[x])?[]:null;}); }
+      if(Array.isArray(state[k])){ state[k]=state[k].includes(v)?state[k].filter(x=>x!==v):[...state[k],v]; }
+      else state[k]=v;
+      render();
+    }
+    function choiceHtml(k,opts){return `<div class="choices ${opts.length>4?'one':''}">${opts.map(([v,t,d])=>`<button type="button" class="choice ${state[k]===v?'selected':''}" data-choice="${esc(v)}" data-field="${esc(k)}" aria-pressed="${state[k]===v}"><span class="circle">${state[k]===v?'✓':''}</span><span><b>${esc(t)}</b>${d?`<small>${esc(d)}</small>`:''}</span></button>`).join('')}</div>`;}
+    function checkHtml(k,opts){return opts.map(([v,t])=>`<label class="checkrow ${state[k].includes(v)?'checked':''}"><input type="checkbox" data-field="${esc(k)}" value="${esc(v)}" ${state[k].includes(v)?'checked':''}><span><strong>${esc(t)}</strong></span></label>`).join('');}
+    function renderQuestion(k){
+      const p=prompts[k]; let s=`<p class="question">${esc(p.question)}</p>`;
+      s+=p.multiple?checkHtml(k,p.options):choiceHtml(k,p.options);
+      if(k==='risk') s+=`<div class="toolrow"><button type="button" data-tool="rcri">Open RCRI reference checklist ↗</button></div><div class="detail"><strong>Risk score ≠ clearance</strong>RCRI is one reference score; do not directly convert its point total into a procedure-specific MACE percentage here. Choose the category using an appropriate validated risk estimate.</div>`;
+      if(k==='modifiers') s+=`<div class="detail"><strong>Risk-modifier screen</strong>Frailty, device management, pulmonary hypertension, recent PCI, and other complex conditions may require individualized planning. No selection is interpreted as a diagnosis.</div>`;
+      if(k==='capacity') s+=`<div class="toolrow"><button type="button" data-tool="dasi">Open DASI scoring aid ↗</button><button type="button" data-tool="frailty">Open frailty reference ↗</button></div><div class="detail"><strong>About DASI</strong>A DASI score greater than 34 is associated with better perioperative prognosis; it is not a substitute for a full assessment or an automatic pathway disposition.</div>`;
+      if(k==='focus') s+=`<div class="detail"><strong>Testing is not automatically indicated</strong>Biomarkers, echocardiography, and stress testing have separate clinical indications, limitations, and recommendation classes. Review the full guideline before placing orders.</div>`;
+      if(k==='biomarkers') s+=`<div class="detail"><strong>Applicable indications and assays vary</strong>A normal biomarker does not exclude other cardiac pathology. An abnormal result does not independently authorize postponement, invasive procedures, or treatment changes.</div>`;
+      if(k==='team') s+=`<div class="detail"><strong>Shared decision-making</strong>The surgeon, anesthesia team, patient, and relevant specialists weigh urgency, risks, alternatives and whether further evaluation will change care. This tool does not make that decision.</div>`;
+      if(k==='findings') s+=`<div class="detail"><strong>Do not treat this as a test interpreter</strong>Findings should be documented and acted on by qualified clinicians using the full report and patient context. This demo does not specify imaging thresholds or treatments.</div>`;
+      if(k==='acute') s+=`<div class="detail"><strong>Safety checkpoint</strong>Suspected acute coronary syndrome, decompensated heart failure, or unstable arrhythmia needs prompt clinician evaluation. Severe valve disease may require focused evaluation; urgency determines how much assessment is feasible.</div>`;
+      if(k==='urgency') s+=`<div class="detail"><strong>Definitions vary by urgency</strong>Emergency procedures may not allow routine testing. Do not delay emergency treatment based on this demonstration.</div>`;
+      if(k==='testingChange') s+=`<div class="detail"><strong>Pretest question</strong>For patients with elevated risk and poor or unknown capacity, stress testing may be considered selectively only when results would change management; routine testing is not generally beneficial.</div>`;
+      return s;
+    }
+    function outcome(){
+      if(state.urgency==='emergency') return {type:'review',title:'Emergency pathway — prioritize urgent team assessment',text:'A lengthy preoperative testing pathway may not be feasible. Assess and treat immediately actionable cardiac concerns as the emergency permits; do not interpret this tool as clearance or a recommendation to delay necessary surgery.'};
+      if(state.acute!=='no') return {type:'alert',title:'Potential acute cardiac issue — clinician escalation',text:'Clinical assessment of the suspected or uncertain acute condition is the priority. For nonemergency surgery, consider whether evaluation or stabilization is needed, with a multidisciplinary discussion of timing and alternatives.'};
+      if(state.risk==='low') return {type:'',title:'Low estimated risk — routine extra testing often adds little',text:'If the validated estimate is below 1% and there is no active cardiac issue, routine preoperative stress testing is generally not indicated solely for cardiac risk assessment. This is not an authorization to proceed.'};
+      if(state.risk==='unknown') return {type:'review',title:'Uncertain estimated risk — complete assessment',text:'Do not infer low risk from absent data. Obtain a reliable clinical history and use an appropriate validated risk estimator; consider procedure and patient risk modifiers.'};
+      if(state.capacity==='good') return {type:'',title:'Elevated risk with adequate capacity — individualized planning',text:'Good functional capacity often makes routine stress testing unnecessary in clinically stable patients. Review other indications, risk modifiers, and the proposed surgery with the clinical team.'};
+      if(state.testingChange==='no') return {type:'',title:'Testing unlikely to alter management',text:'When further testing is unlikely to change management, routine stress testing is not generally helpful. Continue shared planning and optimization based on the full clinical assessment.'};
+      if(state.biomarkers==='normal') return {type:'',title:'Biomarkers interpreted as normal — continue clinical review',text:'In the guideline pathway, normal applicable biomarkers may support proceeding without further cardiac risk testing. They do not override independent test indications or determine surgical fitness.'};
+      if(state.team==='pending') return {type:'review',title:'Team discussion outstanding',text:'The clinician-led decision about further evaluation and risk mitigation remains unresolved. This demonstration does not decide whether to postpone or proceed.'};
+      if(state.team==='no-eval') return {type:'review',title:'Team plan: no additional cardiac evaluation',text:'The team has recorded a decision not to pursue additional workup. Review the rationale, risk modifiers, patient goals, and independent treatment indications.'};
+      if(state.findings==='concerning') return {type:'alert',title:'Concerning evaluation findings — clinician follow-up',text:'Abnormal findings require specialist interpretation and a patient-specific treatment and procedural plan. This app does not determine surgery timing or prescribe intervention.'};
+      if(state.findings==='reassuring') return {type:'',title:'Evaluation reviewed — individualized plan remains essential',text:'Clinicians identified no additional high-concern findings in the evaluation they selected. Continue shared planning, accounting for all clinical and procedural risks.'};
+      if(state.findings==='pending') return {type:'review',title:'Evaluation pending or indeterminate',text:'Conclusions are not established while relevant testing or interpretation is incomplete. Follow up through your clinical team.'};
+      return {type:'review',title:'Clinical team discussion recommended',text:'With elevated estimated risk and unresolved capacity or test utility, clarify whether further workup would change management before ordering tests or making scheduling decisions.'};
+    }
+    function summaryHtml(){
+      const o=outcome(); const entries=[['Urgency',responseSummary('urgency')],['CV screen',responseSummary('cv')],['Acute condition',responseSummary('acute')]];
+      if(state.risk) entries.push(['MACE estimate',responseSummary('risk')]);
+      if(state.capacity) entries.push(['Functional capacity',responseSummary('capacity')]);
+      if(state.testingChange) entries.push(['Testing changes management?',responseSummary('testingChange')]);
+      if(state.biomarkers) entries.push(['Biomarker status',responseSummary('biomarkers')]);
+      if(state.team) entries.push(['MDT discussion',responseSummary('team')]);
+      if(state.findings) entries.push(['Evaluation findings',responseSummary('findings')]);
+      if(state.modifiers.length) entries.push(['Risk modifiers',String(state.modifiers.length)+' flagged']);
+      if(state.rcri.length) entries.push(['RCRI reference score',String(state.rcri.length)+' / 6']);
+      if(state.dasi.length) entries.push(['Illustrative DASI',DASI.reduce((sum,[k,w])=>sum+(state.dasi.includes(k)?w:0),0).toFixed(2)+' points']);
+      if(state.cfs && state.cfs!=='not') entries.push(['CFS category',state.cfs]);
+      let advice=[];
+      if(state.urgency==='emergency') advice=['Prioritize immediate clinical evaluation consistent with the time available.','Address unstable cardiac concerns without using a web tool to determine surgical timing.'];
+      else if(state.acute!=='no') advice=['Urgently clarify the suspected or uncertain acute cardiovascular issue.','Discuss surgery timing and management with appropriate treating clinicians.'];
+      else if(state.risk==='low') advice=['Document the validated risk estimate and relevant procedural context.','Avoid reflexive routine stress testing solely for risk stratification; evaluate other test indications separately.'];
+      else if(state.risk==='unknown') advice=['Establish a defensible, procedure-aware risk estimate.','Review patient-specific modifiers and other active clinical concerns.'];
+      else if(state.capacity==='good') advice=['Document functional status and risk modifiers.','Optimize relevant conditions and consider any independent indication for further evaluation.'];
+      else {advice=['Confirm whether testing will influence a specific clinical decision.','Use a multidisciplinary approach for complex or high-consequence decisions.']; if(state.testingChange==='yes') advice.push('If appropriate, select testing only for a documented guideline-based indication.');}
+      if(state.modifiers.length) advice.push('Review flagged risk modifiers individually; some require specialized perioperative plans.');
+      if(state.biomarkers==='abnormal') advice.push('Review abnormal biomarker results in assay-specific and clinical context.');
+      if(state.team==='pending') advice.push('Obtain an actual multidisciplinary determination before assuming a pathway outcome.');
+      if(state.findings==='concerning') advice.push('Ensure the clinical team addresses and documents the identified abnormal findings.');
+      if(state.findings==='pending') advice.push('Clarify outstanding results and follow-up responsibilities.');
+      const labelOf=(k,v)=> (prompts[k]?.options||[]).find(x=>x[0]===v)?.[1]||v;
+      return `<div class="outcome ${o.type}"><span class="eyebrow">Illustrative pathway outcome · not surgical clearance</span><h2>${esc(o.title)}</h2><p>${esc(o.text)}</p></div>
+        <h3 class="sectiontitle">Assessment choices</h3><div class="factlist">${entries.map(([a,b])=>`<div class="fact"><b>${esc(a)}</b><span>${esc(b)}</span></div>`).join('')}</div>
+        ${state.modifiers.length?`<h3 class="sectiontitle">Flagged modifiers</h3><ul class="guidance">${state.modifiers.map(v=>`<li>${esc(labelOf('modifiers',v))}</li>`).join('')}</ul>`:''}
+        ${state.focus.length?`<h3 class="sectiontitle">Questions for individualized review</h3><ul class="guidance">${state.focus.map(v=>`<li>${esc(labelOf('focus',v))}</li>`).join('')}</ul>`:''}
+        <h3 class="sectiontitle">Suggested review actions (not orders)</h3><ul class="guidance">${advice.map(x=>`<li>${esc(x)}</li>`).join('')}</ul>
+        <div class="detail"><strong>Important clinical limitation</strong>This prototype omits detailed guidance on medications, anticoagulation, recent coronary intervention, CIED programming, pulmonary hypertension, assay-specific biomarker thresholds, and surgery-specific exceptions. Use the complete guideline and your institutional processes.</div>
+        <div class="actionrow"><button class="btn primary" id="print" type="button">Print summary</button><button class="btn" id="copy" type="button">Copy text summary</button><button class="btn" id="new" type="button">Start over</button></div>
+        <div class="sources"><strong>Clinical reference:</strong> <a href="${BASE}" target="_blank" rel="noopener noreferrer">2026 reaffirmed AHA/ACC multisociety perioperative cardiovascular guideline</a>. This demonstration is independently authored and is not endorsed by AHA, ACC, or any medical institution. Source material should be reviewed before clinical implementation.</div>`;
+    }
+    function summaryText(){
+      const o=outcome();
+      const lines=['PREOPERATIVE CARDIOVASCULAR EVALUATION — UNVALIDATED DEMONSTRATION','NOT FOR PATIENT CARE / NOT CLEARANCE','',`Illustrative pathway outcome: ${o.title}`,o.text,'','Selections:'];
+      pathway().filter(k=>k!=='review').forEach(k=>lines.push(`- ${label[k]}: ${responseSummary(k)}`));
+      lines.push('','This application does not ask for identifiers and does not intentionally persist inputs.','Reference: '+BASE);
+      return lines.join('\n');
+    }
+    function render(){
+      const steps=pathway();
+      if(!steps.includes(current)) current=steps[steps.length-1];
+      const idx=steps.indexOf(current);
+      const isReview=current==='review';
+      el('eyebrow').textContent=isReview?'Review · independent clinical judgment required':'Clinical pathway · interactive prototype';
+      el('stepTitle').textContent=isReview?'Assessment summary':prompts[current].title;
+      el('stepDesc').textContent=isReview?'Review what you entered and the nonbinding educational observations below. No decision is a surgical clearance.':prompts[current].desc;
+      el('stepCount').textContent=`Step ${idx+1} of ${steps.length}`;
+      const pct=Math.round((idx+1)/steps.length*100);
+      el('progress').setAttribute('aria-valuenow',pct);el('bar').style.width=pct+'%';
+      el('body').innerHTML=isReview?summaryHtml():renderQuestion(current);
+      el('back').disabled=idx===0;
+      el('next').style.display=isReview?'none':'';
+      el('next').disabled=!hasAnswer(current);
+      el('next').textContent=steps[idx+1]==='review'?'Review assessment →':'Continue →';
+      el('timeline').innerHTML=steps.map((k,i)=>`<li class="${i===idx?'current':i<idx?'done':''}"><div class="timeline-dot">${i<idx?'✓':i+1}</div><div class="timeline-content"><button type="button" data-goto="${k}" ${i>idx?'disabled':''}>${esc(label[k])}</button><p>${i<=idx?esc(responseSummary(k)):'Upcoming step'}</p></div></li>`).join('');
+      document.querySelectorAll('[data-choice]').forEach(b=>b.addEventListener('click',()=>modify(b.dataset.field,b.dataset.choice)));
+      document.querySelectorAll('.checkrow input').forEach(b=>b.addEventListener('change',()=>modify(b.dataset.field,b.value)));
+      document.querySelectorAll('[data-tool]').forEach(b=>b.addEventListener('click',()=>openCalculator(b.dataset.tool)));
+      document.querySelectorAll('[data-goto]').forEach(b=>b.addEventListener('click',()=>{if(!b.disabled){current=b.dataset.goto;render();window.scrollTo(0,0);}}));
+      if(isReview){el('print').addEventListener('click',()=>window.print());el('copy').addEventListener('click',copySummary);el('new').addEventListener('click',restart);}
+    }
+    function next(){ if(!hasAnswer(current))return;const steps=pathway();const i=steps.indexOf(current);current=steps[Math.min(i+1,steps.length-1)];render();window.scrollTo(0,0); }
+    function back(){ const steps=pathway();const i=steps.indexOf(current);if(i>0){current=steps[i-1];render();window.scrollTo(0,0);} }
+    function restart(){ for(const key of Object.keys(state)) state[key]=Array.isArray(state[key])?[]:null;current='urgency';render();window.scrollTo(0,0); }
+    async function copySummary(){try{await navigator.clipboard.writeText(summaryText());el('copy').textContent='Copied ✓';}catch(e){const ta=document.createElement('textarea');ta.value=summaryText();document.body.append(ta);ta.select();const ok=document.execCommand('copy');ta.remove();el('copy').textContent=ok?'Copied ✓':'Copy not supported';}}
+    const RCRI=[['highrisk','Higher-risk surgery (intraperitoneal, intrathoracic, or suprainguinal vascular)'],['ihd','History of ischemic heart disease'],['chf','History of congestive heart failure'],['stroke','History of cerebrovascular disease'],['insulin','Preoperative insulin therapy'],['creat','Preoperative creatinine >2.0 mg/dL']];
+    // DASI activity descriptions are deliberately brief paraphrases; this scoring aid is not a substitute for the validated questionnaire.
+    const DASI=[['care',2.75,'Self-care (dressing, bathing, eating)'],['indoors',1.75,'Walk around home'],['blocks',2.75,'Walk one to two blocks on level ground'],['stairs',5.50,'Climb stairs or walk uphill'],['run',8.00,'Run a short distance'],['light',2.70,'Perform light housework'],['moderate',3.50,'Perform moderate housework'],['heavy',8.00,'Perform heavy household tasks'],['yard',4.50,'Perform yard work'],['sex',5.25,'Sexual activity'],['recreation',6.00,'Moderate recreation'],['sports',7.50,'Strenuous sports']];
+    function openCalculator(tool){
+      const panel=el('calcBody');
+      if(tool==='rcri'){
+        el('calcTitle').textContent='RCRI · reference checklist';
+        panel.innerHTML=`<p>Select historical risk factors for the original 6-component Revised Cardiac Risk Index (RCRI). An RCRI total alone is not a calibrated individualized MACE probability, and this tool does not equate it with a <1% or ≥1% classification.</p>${RCRI.map(([k,t])=>`<label class="calc-row"><input type="checkbox" data-rcri="${k}" ${state.rcri.includes(k)?'checked':''}><span>${esc(t)}</span><span class="weight">1 point</span></label>`).join('')}<div class="calc-result" id="calcResult"></div>`;
+        panel.querySelectorAll('[data-rcri]').forEach(c=>c.addEventListener('change',()=>{state.rcri=Array.from(panel.querySelectorAll('[data-rcri]:checked')).map(x=>x.dataset.rcri);updateCalc('rcri');}));updateCalc('rcri');
+      }else if(tool==='dasi'){
+        el('calcTitle').textContent='DASI · activity scoring aid';
+        panel.innerHTML=`<p>Check all activities the person can perform. This shortened paraphrased checklist is for learning, not a validated replacement for administering the original DASI instrument.</p>${DASI.map(([k,w,t])=>`<label class="calc-row"><input type="checkbox" data-dasi="${k}" ${state.dasi.includes(k)?'checked':''}><span>${esc(t)}</span><span class="weight">+${w.toFixed(2)}</span></label>`).join('')}<div class="calc-result" id="calcResult"></div>`;
+        panel.querySelectorAll('[data-dasi]').forEach(c=>c.addEventListener('change',()=>{state.dasi=Array.from(panel.querySelectorAll('[data-dasi]:checked')).map(x=>x.dataset.dasi);updateCalc('dasi');}));updateCalc('dasi');
+      }else{
+        el('calcTitle').textContent='Frailty · context aid';
+        const opts=[['not','Not assessed'],['1-4','CFS 1–4: not generally categorized as frail'],['5-9','CFS 5–9: frailty range; assess clinical context']];
+        panel.innerHTML=`<p>The Clinical Frailty Scale is a separate clinical assessment, not a substitute for examination. Assign a formal CFS score only with the appropriate validated instrument and clinician training.</p>${opts.map(([v,t])=>`<label class="calc-row"><input type="radio" name="cfs" value="${v}" ${state.cfs===v?'checked':''}><span>${esc(t)}</span></label>`).join('')}<div class="detail"><strong>Frailty may modify risk.</strong> Frailty should inform shared decision-making, but no score here automatically determines testing or surgery timing.</div>`;
+        panel.querySelectorAll('[name=cfs]').forEach(c=>c.addEventListener('change',()=>{state.cfs=c.value;}));
+      }
+      el('calculator').style.display='grid';
+    }
+    function updateCalc(type){
+      if(type==='rcri'){const score=state.rcri.length;el('calcResult').innerHTML=`<b>${score} / 6</b><div class="muted">Count of original RCRI factors selected. Do not map directly to individualized percentage risk.</div>`;}
+      if(type==='dasi'){const score=DASI.reduce((sum,[k,w])=>sum+(state.dasi.includes(k)?w:0),0);const mets=(0.43*score+9.6)/3.5;el('calcResult').innerHTML=`<b>${score.toFixed(2)}</b> <span class="muted">DASI points</span><div class="muted">Estimated peak VO₂-derived METs: ${mets.toFixed(1)} (formula-based, not measured). ${score>34?'Score >34 threshold.':'Score is not above the >34 threshold.'} Interpret only with the original validated instrument and clinical context.</div>`;}
+    }
+    el('accept').addEventListener('click',()=>{el('intro').style.display='none';render();});
+    el('closeCalc').addEventListener('click',()=>{el('calculator').style.display='none';});
+    el('back').addEventListener('click',back);el('next').addEventListener('click',next);el('restart').addEventListener('click',restart);
+    document.addEventListener('keydown',e=>{if(e.key==='Escape' && el('calculator').style.display!=='none') el('calculator').style.display='none';});
+    render();
+  })();
+  </script>
+</body>
+</html>
